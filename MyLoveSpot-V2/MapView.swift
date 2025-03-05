@@ -12,6 +12,7 @@ struct MapView: View {
     @Binding var spots: [Spots]
     @Binding var selectedSpot: Spots?
 
+    // TODO: Start with the default user location
     @State private var region = MapCameraPosition.region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
