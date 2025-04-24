@@ -1,5 +1,5 @@
 //
-//  Spots.swift
+//  SpotsView.swift
 //  MyLoveSpot-V2
 //
 //  Created by Quentin Brejoin on 3/4/25.
@@ -11,56 +11,99 @@ import MapKit
 struct SpotsView: View {
     @State private var spots: [Spots] = []
     @State private var searchText = ""
-    @State private var isSearching = false
     @State private var selectedSpot: Spots? = nil
     @StateObject private var locationManager = LocationManager()
     
+    @State private var searchScale: CGFloat = 1.0
+    @State private var showSearchModule = false
+    
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                // Search Bar
-                ZStack {
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundColor(.gray)
-                            .padding(.leading, 10)
-                        
-                        TextField("Search", text: $searchText)
-                            .padding(10)
-                    }
-                    .background(Color(.systemGray6))
-                    .cornerRadius(20)
-                    .padding()
-                    
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            isSearching = true
-                        }) {
-                            Circle()
-                                .fill(Color.black)
-                                .frame(width: 36, height: 36)
-                                .overlay(
-                                    Image(systemName: "magnifyingglass")
-                                        .foregroundColor(.white)
-                                )
-                        }
-                        .padding(.trailing, 25)
-                    }
-                }
-                
-                // Spots List
-                ScrollView {
-                    LazyVStack(spacing: 20) {
-                        ForEach(spots) { spot in
-                            SpotCard(spot: spot, userLocation: locationManager.lastKnownLocation)
-                                .padding(.horizontal)
+            ZStack {
+                VStack(spacing: 0) {
+                    ZStack {
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.gray)
+                                .padding(.leading, 10)
+                            
+                            Text(searchText.isEmpty ? "Search" : searchText)
+                                .foregroundColor(searchText.isEmpty ? .gray : .black)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(10)
+                                .contentShape(Rectangle())
                                 .onTapGesture {
-                                    selectedSpot = spot
+                                    withAnimation(.spring()) {
+                                        searchScale = 1.1
+                                        
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                            withAnimation(.easeInOut(duration: 0.3)) {
+                                                showSearchModule = true
+                                            }
+                                        }
+                                    }
                                 }
                         }
+                        .background(Color(.systemGray6))
+                        .cornerRadius(20)
+                        .padding()
+                        .scaleEffect(searchScale)
+                        .opacity(showSearchModule ? 0 : 1)
+                        
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                withAnimation(.spring()) {
+                                    searchScale = 1.1
+
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            showSearchModule = true
+                                        }
+                                    }
+                                }
+                            }) {
+                                Circle()
+                                    .fill(Color.black)
+                                    .frame(width: 36, height: 36)
+                                    .overlay(
+                                        Image(systemName: "magnifyingglass")
+                                            .foregroundColor(.white)
+                                    )
+                            }
+                            .padding(.trailing, 25)
+                            .opacity(showSearchModule ? 0 : 1)
+                        }
                     }
-                    .padding(.vertical)
+                    
+                    ScrollView {
+                        LazyVStack(spacing: 20) {
+                            ForEach(spots) { spot in
+                                SpotCard(spot: spot, userLocation: locationManager.lastKnownLocation)
+                                    .padding(.horizontal)
+                                    .onTapGesture {
+                                        selectedSpot = spot
+                                    }
+                            }
+                        }
+                        .padding(.vertical)
+                    }
+                }
+                .blur(radius: showSearchModule ? 3 : 0)
+
+                if showSearchModule {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                showSearchModule = false
+                                searchScale = 1.0
+                            }
+                        }
+                    
+                    SearchModule(isShowing: $showSearchModule, searchText: $searchText)
+                        .padding()
+                        .transition(.move(edge: .top).combined(with: .opacity))
                 }
             }
             .navigationBarHidden(true)
@@ -71,12 +114,9 @@ struct SpotsView: View {
             .sheet(item: $selectedSpot) { spot in
                 SpotDetailView(spot: spot)
             }
-            .sheet(isPresented: $isSearching) {
-                SearchView(searchText: $searchText)
-            }
         }
     }
-
+    
     private func loadSpots() {
         spots = [
             Spots(title: "UC Berkeley botanical garden", location: "Berkeley, CA", description: "Beautiful garden in the Berkeley hills with a diverse collection of plants from around the world.",
@@ -111,14 +151,13 @@ struct SpotCard: View {
         let spotLocationCL = CLLocation(latitude: spotCoordinates.latitude, longitude: spotCoordinates.longitude)
         
         let distanceInMeters = userLocationCL.distance(from: spotLocationCL)
-        let distanceInMinutes = Int(distanceInMeters / 13.8 / 60) // Assuming average walking speed of 5 km/h (or ~13.8 m/min)
+        let distanceInMinutes = Int(distanceInMeters / 13.8 / 60)
         
         return "\(distanceInMinutes) min away"
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Image
             ZStack {
                 Rectangle()
                     .fill(Color.gray.opacity(0.3))
@@ -130,8 +169,7 @@ struct SpotCard: View {
                                 .foregroundColor(.gray)
                     )
             }
-            
-            // Info
+
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text(spot.title)
@@ -174,29 +212,6 @@ struct SpotCard: View {
         .background(Color.white)
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-    }
-}
-
-struct SearchView: View {
-    @Binding var searchText: String
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        VStack {
-            Text("Search Results")
-                .font(.title)
-                .padding()
-            
-            Text("Search functionality will be implemented later")
-                .foregroundColor(.gray)
-            
-            Spacer()
-            
-            Button("Close") {
-                presentationMode.wrappedValue.dismiss()
-            }
-            .padding()
-        }
     }
 }
 
