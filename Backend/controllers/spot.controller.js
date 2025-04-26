@@ -31,7 +31,7 @@ exports.getAll = async (req, res) => {
   }
 }
 
-exports.deleteSpot = async (req, res) => {
+exports.delete = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -42,7 +42,7 @@ exports.deleteSpot = async (req, res) => {
   }
 }
 
-exports.updateSpot = async (req, res) => {
+exports.update = async (req, res) => {
   const { id } = req.params;
   const { name, description, address, creator_id, longitude, latitude, logo, rating, color, image, link } = req.body;
 
@@ -67,7 +67,7 @@ exports.updateSpot = async (req, res) => {
   }
 }
 
-exports.getSpotById = async (req, res) => {
+exports.getById = async (req, res) => {
   const { id } = req.params;
 
   try {
