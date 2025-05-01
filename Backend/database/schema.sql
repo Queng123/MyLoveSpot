@@ -8,6 +8,17 @@ CREATE TABLE User (
     password VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE RefreshToken (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES User(id) ON DELETE CASCADE,
+    token TEXT NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE RefreshToken
+ADD CONSTRAINT one_token_per_user UNIQUE (user_id);
+
 CREATE TABLE Spots (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,

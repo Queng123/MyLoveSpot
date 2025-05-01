@@ -26,8 +26,6 @@ services:
       DB_NAME: ${DB_NAME}
     ports:
       - "${PORT}:3000"
-    volumes:
-      - .:/app
     command: ["npm", "start"]
 
 volumes:
