@@ -24,7 +24,7 @@ exports.getAllTags = async () => {
 }
 
 exports.deleteTag = async (tag_name) => {
-  const query = 'DELETE FROM tags WHERE tag_name = ?';
+  const query = 'DELETE FROM Tag WHERE tag_name = ?';
   const values = [tag_name];
 
   try {
