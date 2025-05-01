@@ -4,8 +4,7 @@ exports.addFavorite = async ({ user_id, spot_id }) => {
   try {
     const result = await db.query(
       `INSERT INTO Favorites (user_id, spot_id)
-       VALUES ($1, $2)
-       RETURNING *`,
+       VALUES (?, ?)`,
       [user_id, spot_id]
     );
 
@@ -19,7 +18,7 @@ exports.addFavorite = async ({ user_id, spot_id }) => {
 exports.getAllFavorites = async (user_id) => {
   try {
     const result = await db.query(
-      `SELECT * FROM Favorites WHERE user_id = $1`,
+      `SELECT * FROM Favorites WHERE user_id = ?`,
       [user_id]
     );
 
@@ -33,7 +32,7 @@ exports.getAllFavorites = async (user_id) => {
 exports.deleteFavorite = async (user_id, spot_id) => {
   try {
     const result = await db.query(
-      `DELETE FROM Favorites WHERE user_id = $1 AND spot_id = $2 RETURNING *`,
+      `DELETE FROM Favorites WHERE user_id = ? AND spot_id = ?`,
       [user_id, spot_id]
     );
 
@@ -45,5 +44,19 @@ exports.deleteFavorite = async (user_id, spot_id) => {
   } catch (error) {
     console.error(error);
     throw new Error('Error deleting favorite');
+  }
+};
+
+exports.isFavorite = async (user_id, spot_id) => {
+  try {
+    const result = await db.query(
+      `SELECT * FROM Favorites WHERE user_id = ? AND spot_id = ?`,
+      [user_id, spot_id]
+    );
+
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error checking favorite status');
   }
 };

@@ -1,8 +1,8 @@
 const ratingService = require('../services/rating.service');
 
 exports.add = async (req, res) => {
-  const { user_id, spot_id, rating } = req.body;
-
+  const { spot_id, rating } = req.body;
+  const user_id = req.user.id;
   try {
     const message = await ratingService.addRating(user_id, spot_id, rating);
     res.json({ message });
@@ -12,7 +12,8 @@ exports.add = async (req, res) => {
 }
 
 exports.delete = async (req, res) => {
-  const { user_id, spot_id } = req.params;
+  const { spot_id } = req.params;
+  const user_id = req.user.id;
 
   try {
     const message = await ratingService.deleteRating(user_id, spot_id);
@@ -23,8 +24,9 @@ exports.delete = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
-  const { user_id, spot_id } = req.params;
+  const { spot_id } = req.params;
   const { rating } = req.body;
+  const user_id = req.user.id;
 
   try {
     const message = await ratingService.updateRating(user_id, spot_id, rating);
@@ -35,8 +37,8 @@ exports.update = async (req, res) => {
 }
 
 exports.getByUserAndSpot = async (req, res) => {
-  const { user_id, spot_id } = req.params;
-
+  const { spot_id } = req.params;
+  const user_id = req.user.id;
   try {
     const rating = await ratingService.getRatingByUserAndSpot(user_id, spot_id);
     res.json(rating);

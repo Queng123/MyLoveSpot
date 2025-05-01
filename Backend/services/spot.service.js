@@ -8,7 +8,6 @@ exports.createSpot = async (
   longitude,
   latitude,
   logo,
-  rating = 0,
   color,
   image,
   link,
@@ -18,7 +17,7 @@ exports.createSpot = async (
     const [result] = await db.query(
       `INSERT INTO Spots (name, description, address, creator_id, longitude, latitude, logo, rating, color, image, link)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, description, address, creator_id, longitude, latitude, logo, rating, color, image, link]
+      [name, description, address, creator_id, longitude, latitude, logo, 0, color, image, link]
     );
 
     for (const tag of tags) {
@@ -67,11 +66,9 @@ exports.updateSpot = async (
   name,
   description,
   address,
-  creator_id,
   longitude,
   latitude,
   logo,
-  rating,
   color,
   image,
   link,
@@ -80,9 +77,9 @@ exports.updateSpot = async (
   try {
     const result = await db.query(
       `UPDATE Spots
-      SET name = ?, description = ?, address = ?, creator_id = ?, longitude = ?, latitude = ?, logo = ?, rating = ?, color = ?, image = ?, link = ?
+      SET name = ?, description = ?, address = ?, longitude = ?, latitude = ?, logo = ?, color = ?, image = ?, link = ?
       WHERE id = ?`,
-      [name, description, address, creator_id, longitude, latitude, logo, rating, color, image, link, id]
+      [name, description, address, longitude, latitude, logo, color, image, link, id]
     );
 
     if (result.rowCount === 0) {

@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const ratingController = require('../controllers/rating.controller');
+const verifyToken = require('../utils/authMiddleware');
 
-router.post('/add', ratingController.add);
-router.delete('/delete/:user_id/:spot_id', ratingController.delete);
-router.put('/update/:user_id/:spot_id', ratingController.update);
-router.get('/get/:user_id/:spot_id', ratingController.getByUserAndSpot);
+router.post('/add', verifyToken, ratingController.add);
+router.delete('/delete/:spot_id', verifyToken, ratingController.delete);
+router.put('/update/:spot_id', verifyToken, ratingController.update);
+router.get('/get/:spot_id', verifyToken, ratingController.getByUserAndSpot);
 
 
 
