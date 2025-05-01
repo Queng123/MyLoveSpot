@@ -97,19 +97,13 @@ struct ProfileView: View {
                             .fontWeight(.medium)
 
                         Spacer()
-
-                        Image(systemName: "chevron.right")
-                            .resizable()
-                            .frame(width: 12, height: 19)
-                            .foregroundColor(.black)
-                            .padding(.trailing, 30)
+                        Toggle(isOn: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Is On@*/.constant(true)/*@END_MENU_TOKEN@*/) {
+                            
+                        }.padding(.trailing, 30)
                     }
                     Divider()
                         .padding(.horizontal, 15)
-                }
-
-                    // Account Settings
-                    SettingsRow(icon: "person.crop.circle.fill", label: "Account Settings")
+                
 
                     // Support Header
                     Text("Support")
@@ -121,11 +115,23 @@ struct ProfileView: View {
                     SettingsRow(icon: "pencil", label: "Give us feedback")
                 }
                 .padding(.bottom, 40) // extra space at bottom
+                Button("Logout") {
+                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
             }
+                .foregroundColor(Color.red)
+                Spacer()
+            }
+           
         }
     }
 }
 
+// helpcenter create FAQ's for user to look through
+
+// user profile will just be the spots the have posted/created
+
+// Contact us is what you expect it to be
+// feedback is a link to write a review for the app on the app store
 
 #Preview {
     ProfileView()
