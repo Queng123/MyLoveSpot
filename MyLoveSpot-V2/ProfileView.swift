@@ -7,11 +7,125 @@
 
 import SwiftUI
 
-struct ProfileView: View {
+struct SettingsRow: View {
+    var icon: String
+    var label: String
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World Profile!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            Image(systemName: icon)
+                .resizable()
+                .frame(width: 35, height: 35)
+                .padding(.leading, 30)
+                .padding(.trailing, 10)
+
+            Text(label)
+                .font(.title2)
+                .fontWeight(.medium)
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .resizable()
+                .frame(width: 12, height: 19)
+                .foregroundColor(.black)
+                .padding(.trailing, 30)
+        }
+        Divider()
+            .padding(.horizontal, 15)
     }
 }
+
+struct ProfileView: View {
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    
+                    // Profile Header
+                    Text("Profile")
+                        .font(.largeTitle).bold()
+                        .padding(.leading,30)
+                        .padding(.top, 20)
+                    
+                    // Profile Card
+                    NavigationLink(destination: SpotsView()) {
+                        HStack {
+                            Image(systemName: "person.crop.circle.fill")
+                                .resizable()
+                                .frame(width: 55, height: 55)
+                                .foregroundColor(.black)
+                                .padding()
+
+                            VStack(alignment: .leading) {
+                                Text("User name")
+                                    .foregroundColor(.black)
+
+                                Text("Show Profile")
+                                    .foregroundColor(.gray)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
+                                .resizable()
+                                .frame(width: 12, height: 19)
+                                .foregroundColor(.black)
+                                .padding(.trailing, 20)
+                        }
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .padding(.horizontal, 15)
+                        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
+                    }
+
+                    // Settings Header
+                    Text("Settings")
+                        .font(.largeTitle).bold()
+                        .padding(.leading,30)
+
+                    // Notification
+                    HStack {
+                        Image(systemName: "bell.circle")
+                            .resizable()
+                            .frame(width: 35, height: 35)
+                            .padding(.leading, 30)
+                            .padding(.trailing, 10)
+
+                        Text("Notifications")
+                            .font(.title2)
+                            .fontWeight(.medium)
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .resizable()
+                            .frame(width: 12, height: 19)
+                            .foregroundColor(.black)
+                            .padding(.trailing, 30)
+                    }
+                    Divider()
+                        .padding(.horizontal, 15)
+                }
+
+                    // Account Settings
+                    SettingsRow(icon: "person.crop.circle.fill", label: "Account Settings")
+
+                    // Support Header
+                    Text("Support")
+                        .font(.largeTitle).bold()
+                        .padding(.leading,30)
+
+                    SettingsRow(icon: "questionmark.circle", label: "Help Center")
+                    SettingsRow(icon: "envelope.circle", label: "Contact us")
+                    SettingsRow(icon: "pencil", label: "Give us feedback")
+                }
+                .padding(.bottom, 40) // extra space at bottom
+            }
+        }
+    }
+}
+
 
 #Preview {
     ProfileView()
