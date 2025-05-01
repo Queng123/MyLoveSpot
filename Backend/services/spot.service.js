@@ -8,20 +8,31 @@ exports.createSpot = async (
   longitude,
   latitude,
   logo,
-  rating,
+  rating = 0,
   color,
   image,
-  link
+  link,
+  tags
 ) => {
   try {
-    const result = await db.query(
+    const [result] = await db.query(
       `INSERT INTO Spots (name, description, address, creator_id, longitude, latitude, logo, rating, color, image, link)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-       RETURNING *`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [name, description, address, creator_id, longitude, latitude, logo, rating, color, image, link]
     );
 
-    return result.rows[0];
+    for (const tag of tags) {
+      const [existingTag] = await db.query('SELECT id FROM Tag WHERE name = ?', [tag]);
+      const [tagResult] = await db.query(
+        `INSERT INTO SpotTags (spot_id, tag_id)
+         SELECT ?, id FROM Tag WHERE name = ?`,
+        [result.insertId, existingTag]
+      );
+      if (!tagResult.insertId) {
+        throw new Error(`Error inserting tag: ${tag}`);
+      }
+    }
+    return result.insertId
   } catch (error) {
     console.error(error);
     throw new Error('Error creating spot');
@@ -31,7 +42,7 @@ exports.createSpot = async (
 exports.getAllSpots = async () => {
   try {
     const result = await db.query('SELECT * FROM Spots');
-    return result.rows;
+    return result[0];
   } catch (error) {
     console.error(error);
     throw new Error('Error fetching spots');
@@ -40,7 +51,7 @@ exports.getAllSpots = async () => {
 
 exports.deleteSpot = async (id) => {
   try {
-    const result = await db.query('DELETE FROM Spots WHERE id = $1 RETURNING *', [id]);
+    const result = await db.query('DELETE FROM Spots WHERE id = ?', [id]);
     if (result.rowCount === 0) {
       throw new Error('Spot not found');
     }
@@ -63,22 +74,34 @@ exports.updateSpot = async (
   rating,
   color,
   image,
-  link
+  link,
+  tags
 ) => {
   try {
     const result = await db.query(
       `UPDATE Spots
-       SET name = $1, description = $2, address = $3, creator_id = $4, longitude = $5,
-           latitude = $6, logo = $7, rating = $8, color = $9, image = $10, link = $11
-       WHERE id = $12
-       RETURNING *`,
+      SET name = ?, description = ?, address = ?, creator_id = ?, longitude = ?, latitude = ?, logo = ?, rating = ?, color = ?, image = ?, link = ?
+      WHERE id = ?`,
       [name, description, address, creator_id, longitude, latitude, logo, rating, color, image, link, id]
     );
 
     if (result.rowCount === 0) {
       throw new Error('Spot not found');
     }
-    return result.rows[0];
+
+    await db.query('DELETE FROM SpotTags WHERE spot_id = ?', [id]);
+    for (const tag of tags) {
+      const [existingTag] = await db.query('SELECT id FROM Tag WHERE name = ?', [tag]);
+      const [tagResult] = await db.query(
+        `INSERT INTO SpotTags (spot_id, tag_id)
+         SELECT ?, id FROM Tag WHERE name = ?`,
+        [result.insertId, existingTag]
+      );
+      if (!tagResult.insertId) {
+        throw new Error(`Error inserting tag: ${tag}`);
+      }
+    }
+    return result[0];
   } catch (error) {
     console.error(error);
     throw new Error('Error updating spot');
@@ -87,11 +110,12 @@ exports.updateSpot = async (
 
 exports.getSpotById = async (id) => {
   try {
-    const result = await db.query('SELECT * FROM Spots WHERE id = $1', [id]);
+    const result = await db.query('SELECT * FROM Spots WHERE id = ?', [id]);
+    console.log(result);
     if (result.rowCount === 0) {
       return null;
     }
-    return result.rows[0];
+    return result[0];
   } catch (error) {
     console.error(error);
     throw new Error('Error fetching spot by ID');

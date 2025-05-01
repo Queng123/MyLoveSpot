@@ -1,10 +1,13 @@
 const spotService = require('../services/spot.service');
 
 exports.create = async (req, res) => {
-  const { name, email } = req.body;
-
+  const { name, description, address, longitude, latitude, logo, rating, color, image, link, tags } = req.body;
+  const creator_id = req.user.id;
+  if (!name || !description || !address || !creator_id || !longitude || !latitude) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
   try {
-    const message = await spotService.createspot(
+    const id = await spotService.createSpot(
       name,
       description,
       address,
@@ -15,8 +18,10 @@ exports.create = async (req, res) => {
       rating,
       color,
       image,
-      link);
-    res.json({ message });
+      link,
+      tags
+    );
+    res.json({ id });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -44,7 +49,7 @@ exports.delete = async (req, res) => {
 
 exports.update = async (req, res) => {
   const { id } = req.params;
-  const { name, description, address, creator_id, longitude, latitude, logo, rating, color, image, link } = req.body;
+  const { name, description, address, creator_id, longitude, latitude, logo, rating, color, image, link, tags } = req.body;
 
   try {
     const message = await spotService.updateSpot(
@@ -59,7 +64,8 @@ exports.update = async (req, res) => {
       rating,
       color,
       image,
-      link
+      link,
+      tags
     );
     res.json({ message });
   } catch (err) {

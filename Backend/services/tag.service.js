@@ -1,8 +1,8 @@
 const db = require('../database/db');
 
-exports.addTag = async (spot_id, tag_name) => {
-  const query = 'INSERT INTO tags (spot_id, tag_name) VALUES (?, ?)';
-  const values = [spot_id, tag_name];
+exports.addTag = async (tag_name) => {
+  const query = 'INSERT INTO Tag (tag_name) VALUES (?)';
+  const values = [tag_name];
 
   try {
     await db.query(query, values);
@@ -12,21 +12,20 @@ exports.addTag = async (spot_id, tag_name) => {
   }
 }
 
-exports.getAllTags = async (spot_id) => {
-  const query = 'SELECT * FROM tags WHERE spot_id = ?';
-  const values = [spot_id];
+exports.getAllTags = async () => {
+  const query = 'SELECT * FROM Tag';
 
   try {
-    const [rows] = await db.query(query, values);
+    const [rows] = await db.query(query);
     return rows;
   } catch (err) {
     throw new Error('Error fetching tags: ' + err.message);
   }
 }
 
-exports.deleteTag = async (spot_id, tag_name) => {
-  const query = 'DELETE FROM tags WHERE spot_id = ? AND tag_name = ?';
-  const values = [spot_id, tag_name];
+exports.deleteTag = async (tag_name) => {
+  const query = 'DELETE FROM tags WHERE tag_name = ?';
+  const values = [tag_name];
 
   try {
     const result = await db.query(query, values);

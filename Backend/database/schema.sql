@@ -31,7 +31,11 @@ CREATE TABLE Spots (
     rating DECIMAL(3,2),
     color VARCHAR(50),
     image TEXT,
-    link TEXT
+    link TEXT,
+    tags TEXT[],
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (name, address)
 );
 
 CREATE TABLE Favorites (
@@ -49,6 +53,12 @@ CREATE TABLE Rating (
 
 CREATE TABLE Tag (
     id SERIAL PRIMARY KEY,
+    tag_name VARCHAR(50) NOT NULL UNIQUE,
+    color VARCHAR(50) NOT NULL,
+);
+
+CREATE TABLE SpotTags (
     spot_id INTEGER REFERENCES Spots(id) ON DELETE CASCADE,
-    tag_name VARCHAR(50) NOT NULL
+    tag_id INTEGER REFERENCES Tag(id) ON DELETE CASCADE,
+    PRIMARY KEY (spot_id, tag_id)
 );
