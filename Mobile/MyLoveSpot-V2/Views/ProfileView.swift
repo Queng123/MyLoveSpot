@@ -37,6 +37,9 @@ struct SettingsRow: View {
 }
 
 struct ProfileView: View {
+    @Binding var spots: [Spots]
+    @Binding var selectedSpot: Spots?
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -48,8 +51,8 @@ struct ProfileView: View {
                         .padding(.leading,30)
                         .padding(.top, 20)
                     
-                    // Profile Card
-                    NavigationLink(destination: SpotsView()) {
+                    // Profile Card REPLACE This with the actual UserView
+                    NavigationLink(destination: SpotsView(spots: $spots, selectedSpot: $selectedSpot)) {
                         HStack {
                             Image(systemName: "person.crop.circle.fill")
                                 .resizable()
@@ -132,7 +135,3 @@ struct ProfileView: View {
 
 // Contact us is what you expect it to be
 // feedback is a link to write a review for the app on the app store
-
-#Preview {
-    ProfileView()
-}

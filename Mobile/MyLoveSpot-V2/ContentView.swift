@@ -26,7 +26,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Favoris", systemImage: "star.fill")
                 }
-            ProfileView()
+            ProfileView(spots: $spots, selectedSpot: $selectedSpot)
                 .tabItem {
                     Label("Profile", systemImage: "person.fill")
                 }
