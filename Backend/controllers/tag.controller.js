@@ -1,10 +1,10 @@
 const tagService = require('../services/tag.service');
 
 exports.add = async (req, res) => {
-  const { tag_name } = req.body;
+  const { tag_name, color } = req.body;
 
   try {
-    const message = await tagService.addTag(tag_name);
+    const message = await tagService.addTag(tag_name, color);
     res.json({ message });
   } catch (err) {
     res.status(500).json({ error: err.message });

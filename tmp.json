@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "name": "Café du Coiewtertreertetreeeeeewn",
+    "description": "Un cafreeterrteetrrweewretreereewewé eechaleueeeereux avec une ambiance décontractée.",
+    "address": "123 rewrewerwretreterw deewew Paris, 75001 Parisee",
+    "longitude": "2.352200",
+    "latitude": "48.856600",
+    "logo": "https://example.com/logo.png",
+    "rating": "0.00",
+    "color": "#FFD700",
+    "image": "https://example.com/image.jpg",
+    "link": "https://example.com",
+    "created_at": "2025-05-03T01:52:12.000Z",
+    "updated_at": "2025-05-03T01:52:12.000Z",
+    "creator_name": "Quentin",
+    "tags": ["test"]
+  }
+]

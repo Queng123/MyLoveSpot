@@ -25,6 +25,7 @@ CREATE TABLE Spots (
     description TEXT,
     address VARCHAR(255),
     creator_id INTEGER REFERENCES User(id) ON DELETE CASCADE,
+
     longitude DECIMAL(9,6),
     latitude DECIMAL(9,6),
     logo TEXT,
@@ -32,7 +33,6 @@ CREATE TABLE Spots (
     color VARCHAR(50),
     image TEXT,
     link TEXT,
-    tags TEXT[],
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (name, address)
@@ -53,8 +53,8 @@ CREATE TABLE Rating (
 
 CREATE TABLE Tag (
     id SERIAL PRIMARY KEY,
-    tag_name VARCHAR(50) NOT NULL UNIQUE,
-    color VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    color VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE SpotTags (

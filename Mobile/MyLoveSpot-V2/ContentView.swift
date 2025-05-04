@@ -36,19 +36,48 @@ struct ContentView: View {
         }
     }
 
-    //TODO: Sample data, replace this by backend fetched data
     private func loadSpots() {
-        spots = [
-            Spots(title: "Spot 1", location: "Location 1", description: "Description 1",
-                  mapInfo: Spots.MapInfo(imageMarker: "mappin", colorMarker: .red,
-                                         coordinates: CLLocationCoordinate2D(latitude: 36.4476, longitude: -122.1623))),
-            Spots(title: "Spot 2", location: "Location 2", description: "Description 2",
-                  mapInfo: Spots.MapInfo(imageMarker: "mappin", colorMarker: .blue,
-                                         coordinates: CLLocationCoordinate2D(latitude: 37.787394, longitude: -122.407633))),
-            Spots(title: "Spot 3", location: "Location 3", description: "Description 3",
-                  mapInfo: Spots.MapInfo(imageMarker: "mappin", colorMarker: .green,
-                                         coordinates: CLLocationCoordinate2D(latitude: 37.7538253, longitude: -122.49082572609919)))
-        ]
+        guard let url = URL(string: "http://127.0.0.1:3000/spot/all") else {
+            print("Wrong URL")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Error fetching data")
+                return
+            }
+            
+            guard let data = data else {
+                print("No data")
+                return
+            }
+            
+            print("Data fetched successfully! (Yay!)")
+            print(String(data: data, encoding: .utf8) ?? "No data")
+            
+            do {
+                let decoder = JSONDecoder()
+                let toDecodeSpots = try decoder.decode([DecodeSpot].self, from: data)
+    
+                for spot in toDecodeSpots {
+                    spots.append(Spots(id: spot.id, name: spot.name, address: spot.address, creator: spot.creator_name, description: spot.description, rating: spot.rating, image: spot.image, link: spot.link, tags: spot.tags, mapInfo: Spots.MapInfo(logo: spot.logo, color: spot.color, longitude: spot.longitude, latitude: spot.latitude)))
+                }
+
+            } catch {
+                print("Error loading data: \(error.localizedDescription)")
+                
+            }
+        }.resume()
     }
 }
 

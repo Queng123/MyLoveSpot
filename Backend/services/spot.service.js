@@ -19,15 +19,17 @@ exports.createSpot = async (
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [name, description, address, creator_id, longitude, latitude, logo, 0, color, image, link]
     );
+    if (!result.insertId) {
+      throw new Error('Error inserting spot');
+    }
 
     for (const tag of tags) {
-      const [existingTag] = await db.query('SELECT id FROM Tag WHERE name = ?', [tag]);
       const [tagResult] = await db.query(
         `INSERT INTO SpotTags (spot_id, tag_id)
          SELECT ?, id FROM Tag WHERE name = ?`,
-        [result.insertId, existingTag]
+        [result.insertId, tag]
       );
-      if (!tagResult.insertId) {
+      if (!tagResult.affectedRows) {
         throw new Error(`Error inserting tag: ${tag}`);
       }
     }
@@ -41,7 +43,33 @@ exports.createSpot = async (
 exports.getAllSpots = async () => {
   try {
     const result = await db.query('SELECT * FROM Spots');
-    return result[0];
+
+    if (result.rowCount === 0) {
+      return [];
+    }
+    const spots = result[0];
+    const finalResult = [];
+
+    for (const spot of spots) {
+      const [creatorRow] = await db.query('SELECT name FROM User WHERE id = ?', [spot.creator_id]);
+      const creator_name = creatorRow[0]?.name || 'Unknown';
+      const tagsResult = await db.query(
+        `SELECT Tag.name
+         FROM SpotTags
+         JOIN Tag ON SpotTags.tag_id = Tag.id
+         WHERE SpotTags.spot_id = ?`,
+        [spot.id]
+      );
+
+      const tags = tagsResult[0].map(tag => tag.name);
+      const { creator_id, ...spotWithoutCreatorId } = spot;
+      finalResult.push({
+        ...spotWithoutCreatorId,
+        creator_name,
+        tags
+      });
+    }
+    return finalResult;
   } catch (error) {
     console.error(error);
     throw new Error('Error fetching spots');

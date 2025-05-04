@@ -1,8 +1,8 @@
 const db = require('../database/db');
 
-exports.addTag = async (tag_name) => {
-  const query = 'INSERT INTO Tag (tag_name) VALUES (?)';
-  const values = [tag_name];
+exports.addTag = async (tag_name, color) => {
+  const query = 'INSERT INTO Tag (name, color) VALUES (?, ?)';
+  const values = [tag_name, color];
 
   try {
     await db.query(query, values);
