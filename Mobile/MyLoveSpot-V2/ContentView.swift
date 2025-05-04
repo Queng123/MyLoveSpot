@@ -14,7 +14,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            SpotsView()
+            SpotsView(spots: $spots, selectedSpot: $selectedSpot)
                 .tabItem {
                     Label("Spots", systemImage: "mappin.and.ellipse")
                 }
