@@ -9,9 +9,9 @@ import SwiftUI
 import MapKit
 
 struct SpotsView: View {
-    @State private var spots: [Spots] = []
+    @Binding var spots: [Spots]
     @State private var searchText = ""
-    @State private var selectedSpot: Spots? = nil
+    @Binding var selectedSpot: Spots?
     @StateObject private var locationManager = LocationManager()
     
     @State private var searchScale: CGFloat = 1.0
@@ -108,33 +108,12 @@ struct SpotsView: View {
             }
             .navigationBarHidden(true)
             .onAppear {
-                loadSpots()
                 locationManager.checkLocationAuthorization()
             }
             .sheet(item: $selectedSpot) { spot in
                 SpotDetailView(spot: spot)
             }
         }
-    }
-    
-    private func loadSpots() {
-        spots = [
-            Spots(title: "UC Berkeley botanical garden", location: "Berkeley, CA", description: "Beautiful garden in the Berkeley hills with a diverse collection of plants from around the world.",
-                  mapInfo: Spots.MapInfo(imageMarker: "leaf", colorMarker: .green,
-                                      coordinates: CLLocationCoordinate2D(latitude: 37.8759, longitude: -122.2393))),
-            Spots(title: "Baker Beach", location: "San Francisco, CA", description: "Sandy beach with stunning views of the Golden Gate Bridge, especially at sunset.",
-                  mapInfo: Spots.MapInfo(imageMarker: "mappin", colorMarker: .blue,
-                                      coordinates: CLLocationCoordinate2D(latitude: 37.7930, longitude: -122.4837))),
-            Spots(title: "Twin Peaks", location: "San Francisco, CA", description: "Famous hills offering panoramic views of the San Francisco Bay Area.",
-                  mapInfo: Spots.MapInfo(imageMarker: "mountain.2", colorMarker: .orange,
-                                      coordinates: CLLocationCoordinate2D(latitude: 37.7544, longitude: -122.4477))),
-            Spots(title: "Muir Woods", location: "Mill Valley, CA", description: "National monument known for its towering old-growth redwood trees.",
-                  mapInfo: Spots.MapInfo(imageMarker: "tree", colorMarker: .green,
-                                      coordinates: CLLocationCoordinate2D(latitude: 37.8912, longitude: -122.5719))),
-            Spots(title: "Fisherman's Wharf", location: "San Francisco, CA", description: "Popular waterfront area with seafood restaurants, shops, and sea lion viewing.",
-                  mapInfo: Spots.MapInfo(imageMarker: "water.waves", colorMarker: .blue,
-                                      coordinates: CLLocationCoordinate2D(latitude: 37.8080, longitude: -122.4177)))
-        ]
     }
 }
 
@@ -172,7 +151,7 @@ struct SpotCard: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text(spot.title)
+                    Text(spot.name)
                         .font(.headline)
                         .lineLimit(1)
                     
@@ -221,7 +200,7 @@ struct SpotDetailView: View {
     
     var body: some View {
         VStack {
-            Text(spot.title)
+            Text(spot.name)
                 .font(.title)
                 .padding()
             
@@ -236,8 +215,4 @@ struct SpotDetailView: View {
             .padding()
         }
     }
-}
-
-#Preview {
-    SpotsView()
 }

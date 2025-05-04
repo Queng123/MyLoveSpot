@@ -25,11 +25,11 @@ struct MapView: View {
             ForEach(spots) { spot in
                 if let mapInfo = spot.mapInfo {
                         Marker(
-                            spot.title,
-                            systemImage: mapInfo.imageMarker,
+                            spot.name,
+                            systemImage: mapInfo.logo,
                             coordinate: mapInfo.coordinates
                         )
-                        .tint(mapInfo.colorMarker)
+                        .tint(mapInfo.color)
                         .tag(spot)
                     }
             }
@@ -46,27 +46,4 @@ struct MapView: View {
         }
 
     }
-}
-
-#Preview {
-    struct MapViewPreview: View {
-        @State private var spots = [
-            Spots(title: "Spot 1", location: "Location 1", description: "Description 1",
-                  mapInfo: Spots.MapInfo(imageMarker: "mappin", colorMarker: .red,
-                                         coordinates: CLLocationCoordinate2D(latitude: 36.4476, longitude: -122.1623))),
-            Spots(title: "Spot 2", location: "Location 2", description: "Description 2",
-                  mapInfo: Spots.MapInfo(imageMarker: "mappin", colorMarker: .blue,
-                                         coordinates: CLLocationCoordinate2D(latitude: 37.787394, longitude: -122.407633))),
-            Spots(title: "Spot 3", location: "Location 3", description: "Description 3",
-                  mapInfo: Spots.MapInfo(imageMarker: "mappin", colorMarker: .green,
-                                         coordinates: CLLocationCoordinate2D(latitude: 37.7538253, longitude: -122.49082572609919)))
-        ]
-        @State private var selectedSpot: Spots? = nil
-
-        var body: some View {
-            MapView(spots: $spots, selectedSpot: $selectedSpot)
-        }
-    }
-
-    return MapViewPreview()
 }

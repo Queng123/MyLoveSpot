@@ -24,7 +24,7 @@ struct FAQBox: View{
     
 }
 
-struct HelpCenter: View{
+struct HelpCenterView: View{
     var body: some View{
         
         VStack(alignment: .leading, spacing: 20) {
@@ -47,9 +47,4 @@ struct HelpCenter: View{
             }
         }.frame(maxWidth: .infinity)
     }
-}
-
-
-#Preview{
-    HelpCenter()
 }
