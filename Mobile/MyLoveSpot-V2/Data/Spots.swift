@@ -19,6 +19,7 @@ struct Spots: Hashable, Identifiable {
     let image: URL?
     let link: URL?
     let tags: [String]
+    var my_rating: Int
     let mapInfo: MapInfo?
 
     struct MapInfo {
@@ -36,7 +37,7 @@ struct Spots: Hashable, Identifiable {
         }
     }
     
-    init(id:Int, name: String, address: String, creator: String, description: String, rating: String, image: String, link: String, tags: [String], mapInfo: MapInfo?) {
+    init(id:Int, name: String, address: String, creator: String, description: String, rating: String, image: String, link: String, tags: [String], my_rating: Int, mapInfo: MapInfo?) {
         self.id = id
         self.name = name
         self.address = address
@@ -46,6 +47,7 @@ struct Spots: Hashable, Identifiable {
         self.image = URL(string: image)
         self.link = URL(string: link)
         self.tags = tags
+        self.my_rating = my_rating
         self.mapInfo = mapInfo
     }
     
@@ -99,4 +101,5 @@ struct DecodeSpot: Codable {
     let updated_at: String
     let creator_name: String
     let tags: [String]
+    let my_rating: Int
 }

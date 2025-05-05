@@ -40,7 +40,7 @@ exports.createSpot = async (
   }
 };
 
-exports.getAllSpots = async () => {
+exports.getAllSpots = async (user_id) => {
   try {
     const result = await db.query('SELECT * FROM Spots');
 
@@ -61,12 +61,19 @@ exports.getAllSpots = async () => {
         [spot.id]
       );
 
+      const [myRating] = await db.query(
+        `SELECT note FROM Rating WHERE user_id = ? AND spot_id = ?`,
+        [user_id, spot.id]
+      );
+      const rating = myRating[0]?.note || -1;
+
       const tags = tagsResult[0].map(tag => tag.name);
       const { creator_id, ...spotWithoutCreatorId } = spot;
       finalResult.push({
         ...spotWithoutCreatorId,
         creator_name,
-        tags
+        tags,
+        my_rating: rating
       });
     }
     return finalResult;

@@ -3,18 +3,19 @@ const db = require('../database/db');
 exports.addRating = async (user_id, spot_id, rating) => {
   try {
     const result = await db.query(
-      `INSERT INTO Rating (user_id, spot_id, rating)
+      `INSERT INTO Rating (user_id, spot_id, note)
        VALUES (?, ?, ?)`,
       [user_id, spot_id, rating]
     );
 
     const spotRatings = await db.query(
-      `SELECT rating FROM Rating WHERE spot_id = ?`,
+      `SELECT note FROM Rating WHERE spot_id = ?`,
       [spot_id]
     );
 
-    const averageRating = spotRatings.rows.reduce((acc, row) => acc + row.rating, 0) / spotRatings.rowCount;
-
+    const notes = spotRatings[0].map(row => row.note);
+    const averageRating =
+      notes.reduce((acc, val) => acc + val, 0) / notes.length;
     await db.query(
       `UPDATE Spots SET rating = ? WHERE id = ?`,
       [averageRating, spot_id]
@@ -22,8 +23,7 @@ exports.addRating = async (user_id, spot_id, rating) => {
     if (result.rowCount === 0) {
       throw new Error('Rating not added');
     }
-
-    return result.rows[0];
+    return { "new_rating": averageRating };
   } catch (error) {
     console.error(error);
     throw new Error('Error adding rating');
@@ -51,17 +51,17 @@ exports.deleteRating = async (user_id, spot_id) => {
 exports.updateRating = async (user_id, spot_id, rating) => {
   try {
     const result = await db.query(
-      `UPDATE Rating SET rating = $3 WHERE user_id = $1 AND spot_id = $2 RETURNING *`,
+      `UPDATE Rating SET note = ? WHERE user_id = ? AND spot_id = ?`,
       [user_id, spot_id, rating]
     );
 
     const spotRatings = await db.query(
-      `SELECT rating FROM Rating WHERE spot_id = $1`,
+      `SELECT rating FROM Rating WHERE spot_id = ?`,
       [spot_id]
     );
     const averageRating = spotRatings.rows.reduce((acc, row) => acc + row.rating, 0) / spotRatings.rowCount;
     await db.query(
-      `UPDATE Spots SET rating = $1 WHERE id = $2`,
+      `UPDATE Spots SET rating = ? WHERE id = ?`,
       [averageRating, spot_id]
     );
 
@@ -79,7 +79,7 @@ exports.updateRating = async (user_id, spot_id, rating) => {
 exports.getRatingByUserAndSpot = async (user_id, spot_id) => {
   try {
     const result = await db.query(
-      `SELECT * FROM Ratings WHERE user_id = $1 AND spot_id = $2`,
+    `SELECT * FROM Ratings WHERE user_id = ? AND spot_id = ?`,
       [user_id, spot_id]
     );
 

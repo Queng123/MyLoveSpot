@@ -44,6 +44,7 @@ struct ContentView: View {
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        request.addValue("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJxdWVudGluLmJyZWpvaW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2Mzc5NTg3LCJleHAiOjE3NDYzODMxODd9.pdZxnLJEgjBNZwovhnn1F508zSDkxdu-TmCxM9cTQeY", forHTTPHeaderField: "Authorization")
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -62,7 +63,6 @@ struct ContentView: View {
                 return
             }
             
-            print("Data fetched successfully! (Yay!)")
             print(String(data: data, encoding: .utf8) ?? "No data")
             
             do {
@@ -70,7 +70,7 @@ struct ContentView: View {
                 let toDecodeSpots = try decoder.decode([DecodeSpot].self, from: data)
     
                 for spot in toDecodeSpots {
-                    spots.append(Spots(id: spot.id, name: spot.name, address: spot.address, creator: spot.creator_name, description: spot.description, rating: spot.rating, image: spot.image, link: spot.link, tags: spot.tags, mapInfo: Spots.MapInfo(logo: spot.logo, color: spot.color, longitude: spot.longitude, latitude: spot.latitude)))
+                    spots.append(Spots(id: spot.id, name: spot.name, address: spot.address, creator: spot.creator_name, description: spot.description, rating: spot.rating, image: spot.image, link: spot.link, tags: spot.tags, my_rating: spot.my_rating, mapInfo: Spots.MapInfo(logo: spot.logo, color: spot.color, longitude: spot.longitude, latitude: spot.latitude)))
                 }
 
             } catch {

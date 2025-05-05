@@ -16,6 +16,11 @@ struct SpotsView: View {
     
     @State private var searchScale: CGFloat = 1.0
     @State private var showSearchModule = false
+    @State private var showingSpotDetail = false
+    
+    private func indexForSpot(_ spot: Spots) -> Int? {
+        return spots.firstIndex(where: { $0.id == spot.id })
+    }
     
     var body: some View {
         NavigationView {
@@ -83,6 +88,7 @@ struct SpotsView: View {
                                     .padding(.horizontal)
                                     .onTapGesture {
                                         selectedSpot = spot
+                                        showingSpotDetail = true
                                     }
                             }
                         }
@@ -110,8 +116,10 @@ struct SpotsView: View {
             .onAppear {
                 locationManager.checkLocationAuthorization()
             }
-            .sheet(item: $selectedSpot) { spot in
-                SpotDetailView(spot: spot)
+            .sheet(isPresented: $showingSpotDetail) {
+                if let spot = selectedSpot, let index = indexForSpot(spot) {
+                    SpotDetailView(spot: $spots[index])
+                }
             }
         }
     }
@@ -162,7 +170,7 @@ struct SpotCard: View {
                             .foregroundColor(.gray)
                     }
                     
-                    Text("4.9")
+                    Text(spot.rating, format: .number.precision(.fractionLength(1)))
                         .foregroundColor(.gray)
                 }
                 
@@ -191,28 +199,5 @@ struct SpotCard: View {
         .background(Color.white)
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-    }
-}
-
-struct SpotDetailView: View {
-    let spot: Spots
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        VStack {
-            Text(spot.name)
-                .font(.title)
-                .padding()
-            
-            Text(spot.description)
-                .padding()
-            
-            Spacer()
-            
-            Button("Close") {
-                presentationMode.wrappedValue.dismiss()
-            }
-            .padding()
-        }
     }
 }
