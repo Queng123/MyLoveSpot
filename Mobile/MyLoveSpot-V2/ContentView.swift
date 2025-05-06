@@ -11,6 +11,7 @@ import MapKit
 struct ContentView: View {
     @State private var spots: [Spots] = []
     @State private var selectedSpot: Spots? = nil
+    @EnvironmentObject var authManager: AuthenticationManager
 
     var body: some View {
         TabView {
@@ -62,7 +63,6 @@ struct ContentView: View {
                 return
             }
             
-            print("Data fetched successfully! (Yay!)")
             print(String(data: data, encoding: .utf8) ?? "No data")
             
             do {
