@@ -15,7 +15,11 @@ class AuthenticationManager: ObservableObject {
         self.refreshToken = getRefreshTokenFromKeychain()
         self.isAuthenticated = self.accessToken != nil
     }
-    
+
+    func getJWTToken() -> String? {
+        return self.accessToken
+    }
+
     func login(email: String, password: String, completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "http://localhost:3000/user/login") else {
             completion(false)
