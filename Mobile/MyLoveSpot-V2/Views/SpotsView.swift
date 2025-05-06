@@ -12,6 +12,7 @@ struct SpotsView: View {
     @Binding var spots: [Spots]
     @State private var searchText = ""
     @Binding var selectedSpot: Spots?
+    @Binding var tags: [Tag]
     @StateObject private var locationManager = LocationManager()
     
     @State private var searchScale: CGFloat = 1.0
@@ -143,6 +144,8 @@ struct SpotsView: View {
                 if let spot = selectedSpot, let index = indexForSpot(spot) {
                     SpotDetailView(spot: $spots[index])
                 }
+            }.sheet(isPresented: $showingNewSpotForm) {
+                NewSpotFormView(spots: $spots, isPresented: $showingNewSpotForm, tags: $tags, selectedSpot: $selectedSpot)
             }
         }
     }

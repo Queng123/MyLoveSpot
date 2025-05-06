@@ -52,7 +52,7 @@ struct ProfileView: View {
                         .padding(.top, 20)
                     
                     // Profile Card REPLACE This with the actual UserView
-                    NavigationLink(destination: SpotsView(spots: $spots, selectedSpot: $selectedSpot)) {
+                    NavigationLink(destination: UserView()) {
                         HStack {
                             Image(systemName: "person.crop.circle.fill")
                                 .resizable()

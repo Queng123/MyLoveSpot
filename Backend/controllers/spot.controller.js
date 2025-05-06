@@ -71,7 +71,7 @@ exports.update = async (req, res) => {
       link,
       tags
     );
-    res.json({ message });
+    res.json(message);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

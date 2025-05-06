@@ -40,6 +40,7 @@ exports.createSpot = async (
   }
 };
 
+// TODO: if the current user is the creator of the spot, do creator_name = me
 exports.getAllSpots = async (user_id) => {
   try {
     const result = await db.query('SELECT * FROM Spots');

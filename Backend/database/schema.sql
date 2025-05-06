@@ -3,7 +3,7 @@ USE my_love_spot;
 
 CREATE TABLE User (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL
 );
@@ -21,9 +21,9 @@ ADD CONSTRAINT one_token_per_user UNIQUE (user_id);
 
 CREATE TABLE Spots (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) UNIQUE NOT NULL,
     description TEXT,
-    address VARCHAR(255),
+    address VARCHAR(255) UNIQUE NOT NULL,
     creator_id INTEGER REFERENCES User(id) ON DELETE CASCADE,
 
     longitude DECIMAL(9,6),
@@ -34,8 +34,7 @@ CREATE TABLE Spots (
     image TEXT,
     link TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (name, address)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE Favorites (
