@@ -17,7 +17,56 @@ class AuthenticationManager: ObservableObject {
     }
 
     func getJWTToken() -> String? {
-        return self.accessToken
+        guard let token = accessToken else {
+            return nil
+        }
+        
+        if isTokenExpired(token) {
+            let group = DispatchGroup()
+            group.enter()
+            
+            var refreshSuccess = false
+            
+            refreshAccessToken { success in
+                refreshSuccess = success
+                group.leave()
+            }
+            
+            _ = group.wait(timeout: .now() + 5.0)
+            
+            if refreshSuccess {
+                return accessToken
+            } else {
+                return nil
+            }
+        }
+
+        return token
+    }
+
+    private func isTokenExpired(_ token: String) -> Bool {
+        let segments = token.components(separatedBy: ".")
+        guard segments.count > 1 else { return true }
+        
+        guard let payloadData = base64UrlDecode(segments[1]),
+              let payload = try? JSONSerialization.jsonObject(with: payloadData, options: []) as? [String: Any],
+              let expDate = payload["exp"] as? TimeInterval else {
+            return true
+        }
+        
+        return Date().timeIntervalSince1970 > (expDate - 30)
+    }
+
+    private func base64UrlDecode(_ input: String) -> Data? {
+        var base64 = input
+            .replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
+        
+        while base64.count % 4 != 0 {
+            base64.append("=")
+        }
+        
+        return Data(base64Encoded: base64)
     }
 
     func login(email: String, password: String, completion: @escaping (Bool) -> Void) {
@@ -73,7 +122,7 @@ class AuthenticationManager: ObservableObject {
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let body: [String: String] = ["refreshToken": refreshToken]
+        let body: [String: String] = ["token": refreshToken]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
         
         URLSession.shared.dataTask(with: request) { data, response, error in

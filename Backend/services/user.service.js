@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 exports.createUser = async (name, email, password) => {
   try {
     const [existingUsers] = await db.execute(
-      'SELECT * FROM User WHERE email = ?',
-      [email]
+      'SELECT * FROM User WHERE email = ? OR name = ?',
+      [email, name]
     );
     if (existingUsers.length > 0) {
       throw new Error('User already exists');

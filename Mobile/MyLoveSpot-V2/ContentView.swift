@@ -11,11 +11,12 @@ import MapKit
 struct ContentView: View {
     @State private var spots: [Spots] = []
     @State private var selectedSpot: Spots? = nil
+    @State private var tags: [Tag] = []
     @EnvironmentObject var authManager: AuthenticationManager
 
     var body: some View {
         TabView {
-            SpotsView(spots: $spots, selectedSpot: $selectedSpot)
+            SpotsView(spots: $spots, selectedSpot: $selectedSpot, tags: $tags)
                 .tabItem {
                     Label("Spots", systemImage: "mappin.and.ellipse")
                 }
@@ -34,7 +35,49 @@ struct ContentView: View {
         }
         .onAppear {
             loadSpots()
+            loadTags()
         }
+    }
+
+    private func loadTags() {
+        guard let url = URL(string: "http://127.0.0.1:3000/tag/all") else {
+            print("Wrong URL")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Error fetching data")
+                return
+            }
+            
+            guard let data = data else {
+                print("No data")
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                tags = try decoder.decode([Tag].self, from: data)
+    
+                for tag in tags {
+                    print("Tag ID: \(tag.id), Name: \(tag.name), Color: \(tag.color)")
+                }
+
+
+            } catch {
+                print("Error loading data: \(error.localizedDescription)")
+                
+            }
+        }.resume()
     }
 
     private func loadSpots() {

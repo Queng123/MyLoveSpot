@@ -12,11 +12,13 @@ struct SpotsView: View {
     @Binding var spots: [Spots]
     @State private var searchText = ""
     @Binding var selectedSpot: Spots?
+    @Binding var tags: [Tag]
     @StateObject private var locationManager = LocationManager()
     
     @State private var searchScale: CGFloat = 1.0
     @State private var showSearchModule = false
     @State private var showingSpotDetail = false
+    @State private var showingNewSpotForm = false
     
     private func indexForSpot(_ spot: Spots) -> Int? {
         return spots.firstIndex(where: { $0.id == spot.id })
@@ -111,6 +113,28 @@ struct SpotsView: View {
                         .padding()
                         .transition(.move(edge: .top).combined(with: .opacity))
                 }
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            showingNewSpotForm = true
+                        }) {
+                            Circle()
+                                .fill(Color.black)
+                                .frame(width: 60, height: 60)
+                                .overlay(
+                                    Image(systemName: "plus")
+                                        .font(.title)
+                                        .foregroundColor(.white)
+                                )
+                                .shadow(radius: 4)
+                        }
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 20)
+                    }
+                }
+                .opacity(showSearchModule ? 0 : 1)
             }
             .navigationBarHidden(true)
             .onAppear {
@@ -120,6 +144,8 @@ struct SpotsView: View {
                 if let spot = selectedSpot, let index = indexForSpot(spot) {
                     SpotDetailView(spot: $spots[index])
                 }
+            }.sheet(isPresented: $showingNewSpotForm) {
+                NewSpotFormView(spots: $spots, isPresented: $showingNewSpotForm, tags: $tags, selectedSpot: $selectedSpot)
             }
         }
     }
