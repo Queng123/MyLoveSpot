@@ -9,9 +9,17 @@ import SwiftUI
 
 @main
 struct MyLoveSpot_V2App: App {
+    @StateObject private var authManager = AuthenticationManager()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if authManager.isAuthenticated {
+                ContentView()
+                    .environmentObject(authManager)
+            } else {
+                LoginView()
+                    .environmentObject(authManager)
+            }
         }
     }
 }
