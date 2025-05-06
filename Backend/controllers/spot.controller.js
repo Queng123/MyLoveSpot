@@ -3,6 +3,9 @@ const spotService = require('../services/spot.service');
 exports.create = async (req, res) => {
   const { name, description, address, longitude, latitude, logo, color, image, link, tags } = req.body;
   const creator_id = req.user.id;
+  if (!creator_id) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
   if (!name || !description || !address || !creator_id || !longitude || !latitude) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -27,8 +30,12 @@ exports.create = async (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
+  const user_id = req.user.id;
+  if (!user_id) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
   try {
-    const spots = await spotService.getAllSpots();
+    const spots = await spotService.getAllSpots(user_id);
     res.json(spots);
   } catch (err) {
     res.status(500).json({ error: err.message });

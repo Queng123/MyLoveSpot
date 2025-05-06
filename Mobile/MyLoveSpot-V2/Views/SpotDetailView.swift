@@ -1,0 +1,102 @@
+//
+//  SpotDetailView.swift
+//  MyLoveSpot-V2
+//
+//  Created by Quentin Brejoin on 5/4/25.
+//
+
+
+import SwiftUI
+
+struct SpotDetailView: View {
+    @Binding var spot: Spots
+    @Environment(\.presentationMode) var presentationMode
+    @State private var rating: Int = 0
+    @State private var hasSubmitted = false
+    @EnvironmentObject var authManager: AuthenticationManager
+
+    var body: some View {
+        VStack {
+            Text(spot.name)
+                .font(.title)
+                .padding()
+            
+            Text(spot.description)
+                .padding()
+
+            HStack {
+                ForEach(1...5, id: \.self) { index in
+                    Image(systemName: index <= rating ? "star.fill" : "star")
+                        .foregroundColor(.yellow)
+                        .font(.title)
+                        .onTapGesture {
+                            rating = index
+                        }
+                }
+            }
+            .padding()
+
+            Button("Submit Rating") {
+                submitRating()
+                
+            }
+            .disabled(rating == 0 || hasSubmitted)
+            .padding()
+            .background(hasSubmitted ? Color.gray : Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+
+            Spacer()
+            
+            Button("Close") {
+                presentationMode.wrappedValue.dismiss()
+            }
+            .padding()
+        }.onAppear {
+            if spot.my_rating != -1 {
+                rating = spot.my_rating
+                hasSubmitted = true
+            }
+            
+        }
+    }
+    
+    func submitRating() {
+        guard let url = URL(string: "http://localhost:3000/rating/add") else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if let token = authManager.getJWTToken() {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else {
+            print("Token: Not available")
+        }
+        let ratingData: [String: Any] = [
+            "spot_id": spot.id,
+            "rating": rating
+        ]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: ratingData, options: [])
+        } catch {
+            print("Error encoding JSON: \(error)")
+            return
+        }
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error submitting rating: \(error)")
+                return
+            }
+            if let response = response as? HTTPURLResponse {
+                print("Rating submitted. Status code: \(response.statusCode)")
+                DispatchQueue.main.async {
+                    hasSubmitted = true
+                }
+            }
+            spot.my_rating = rating
+        }.resume()
+    }
+}

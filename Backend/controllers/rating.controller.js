@@ -5,7 +5,7 @@ exports.add = async (req, res) => {
   const user_id = req.user.id;
   try {
     const message = await ratingService.addRating(user_id, spot_id, rating);
-    res.json({ message });
+    res.json(message);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

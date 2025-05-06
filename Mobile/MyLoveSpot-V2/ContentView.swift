@@ -45,6 +45,12 @@ struct ContentView: View {
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        if let token = authManager.getJWTToken() {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else {
+            print("Token: Not available")
+        }
+        
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -70,7 +76,7 @@ struct ContentView: View {
                 let toDecodeSpots = try decoder.decode([DecodeSpot].self, from: data)
     
                 for spot in toDecodeSpots {
-                    spots.append(Spots(id: spot.id, name: spot.name, address: spot.address, creator: spot.creator_name, description: spot.description, rating: spot.rating, image: spot.image, link: spot.link, tags: spot.tags, mapInfo: Spots.MapInfo(logo: spot.logo, color: spot.color, longitude: spot.longitude, latitude: spot.latitude)))
+                    spots.append(Spots(id: spot.id, name: spot.name, address: spot.address, creator: spot.creator_name, description: spot.description, rating: spot.rating, image: spot.image, link: spot.link, tags: spot.tags, my_rating: spot.my_rating, mapInfo: Spots.MapInfo(logo: spot.logo, color: spot.color, longitude: spot.longitude, latitude: spot.latitude)))
                 }
 
             } catch {
