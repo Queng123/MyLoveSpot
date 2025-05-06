@@ -39,13 +39,13 @@ struct SettingsRow: View {
 struct ProfileView: View {
     @Binding var spots: [Spots]
     @Binding var selectedSpot: Spots?
+    @EnvironmentObject var authManager: AuthenticationManager
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     
-                    // Profile Header
                     Text("Profile")
                         .font(.largeTitle).bold()
                         .padding(.leading,30)
@@ -82,12 +82,10 @@ struct ProfileView: View {
                         .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
                     }
 
-                    // Settings Header
                     Text("Settings")
                         .font(.largeTitle).bold()
                         .padding(.leading,30)
 
-                    // Notification
                     HStack {
                         Image(systemName: "bell.circle")
                             .resizable()
@@ -108,7 +106,6 @@ struct ProfileView: View {
                         .padding(.horizontal, 15)
                 
 
-                    // Support Header
                     Text("Support")
                         .font(.largeTitle).bold()
                         .padding(.leading,30)
@@ -117,14 +114,13 @@ struct ProfileView: View {
                     SettingsRow(icon: "envelope.circle", label: "Contact us")
                     SettingsRow(icon: "pencil", label: "Give us feedback")
                 }
-                .padding(.bottom, 40) // extra space at bottom
+                .padding(.bottom, 40)
                 Button("Logout") {
-                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
-            }
+                    authManager.logout()
+                }
                 .foregroundColor(Color.red)
                 Spacer()
             }
-           
         }
     }
 }
