@@ -9,11 +9,11 @@
 import SwiftUI
 
 struct SpotDetailView: View {
-    // Todo get selected spot and update it, fromt he previous view
     @Binding var spot: Spots
     @Environment(\.presentationMode) var presentationMode
     @State private var rating: Int = 0
     @State private var hasSubmitted = false
+    @EnvironmentObject var authManager: AuthenticationManager
 
     var body: some View {
         VStack {
@@ -67,9 +67,12 @@ struct SpotDetailView: View {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        // TODO: Replace with actual token save in storage
-        request.addValue("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJxdWVudGluLmJyZWpvaW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2Mzc5NTg3LCJleHAiOjE3NDYzODMxODd9.pdZxnLJEgjBNZwovhnn1F508zSDkxdu-TmCxM9cTQeY", forHTTPHeaderField: "Authorization")
 
+        if let token = authManager.getJWTToken() {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else {
+            print("Token: Not available")
+        }
         let ratingData: [String: Any] = [
             "spot_id": spot.id,
             "rating": rating

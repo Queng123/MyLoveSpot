@@ -45,7 +45,12 @@ struct ContentView: View {
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.addValue("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJxdWVudGluLmJyZWpvaW5AZ21haWwuY29tIiwiaWF0IjoxNzQ2Mzc5NTg3LCJleHAiOjE3NDYzODMxODd9.pdZxnLJEgjBNZwovhnn1F508zSDkxdu-TmCxM9cTQeY", forHTTPHeaderField: "Authorization")
+        if let token = authManager.getJWTToken() {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else {
+            print("Token: Not available")
+        }
+        
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
