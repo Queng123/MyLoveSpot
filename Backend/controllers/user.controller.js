@@ -1,11 +1,11 @@
 const userService = require('../services/user.service');
 
-exports.create = async (req, res) => {
+exports.register = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
     const message = await userService.createUser(name, email, password);
-    res.json({ message });
+    res.json( message );
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
 
   try {
     const token = await userService.login(email, password);
-    res.json({ token });
+    res.json(token);
   } catch (err) {
     res.status(401).json({ error: err.message });
   }
