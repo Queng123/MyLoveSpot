@@ -37,8 +37,6 @@ struct SettingsRow: View {
 }
 
 struct ProfileView: View {
-    @Binding var spots: [Spots]
-    @Binding var selectedSpot: Spots?
     @EnvironmentObject var authManager: AuthenticationManager
 
     var body: some View {
@@ -51,7 +49,6 @@ struct ProfileView: View {
                         .padding(.leading,30)
                         .padding(.top, 20)
                     
-                    // Profile Card REPLACE This with the actual UserView
                     NavigationLink(destination: UserView()) {
                         HStack {
                             Image(systemName: "person.crop.circle.fill")

@@ -9,18 +9,23 @@ import Foundation
 import MapKit
 import SwiftUI
 
-struct Spots: Hashable, Identifiable {
+class SpotsStore: ObservableObject {
+    @Published var spots: [Spots] = []
+}
+
+class Spots: Hashable, Identifiable, ObservableObject {
     let id: Int
     let name: String
     let address: String
     let creator: String
     let description: String
-    let rating: Double
+    @Published var rating: Double
     let image: URL?
     let link: URL?
     let tags: [String]
-    var my_rating: Int
+    @Published var my_rating: Int
     let mapInfo: MapInfo?
+    @Published var isFavorite: Bool
 
     struct MapInfo {
         let logo: String
@@ -37,7 +42,7 @@ struct Spots: Hashable, Identifiable {
         }
     }
     
-    init(id:Int, name: String, address: String, creator: String, description: String, rating: String, image: String, link: String, tags: [String], my_rating: Int, mapInfo: MapInfo?) {
+    init(id:Int, name: String, address: String, creator: String, description: String, rating: String, image: String, link: String, tags: [String], my_rating: Int, isFavorite: Bool, mapInfo: MapInfo?) {
         self.id = id
         self.name = name
         self.address = address
@@ -49,6 +54,7 @@ struct Spots: Hashable, Identifiable {
         self.tags = tags
         self.my_rating = my_rating
         self.mapInfo = mapInfo
+        self.isFavorite = isFavorite
     }
     
     func hash(into hasher: inout Hasher) {
@@ -102,4 +108,5 @@ struct DecodeSpot: Codable {
     let creator_name: String
     let tags: [String]
     let my_rating: Int
+    let is_favorite: Bool
 }

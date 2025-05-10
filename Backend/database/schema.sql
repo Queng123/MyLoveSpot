@@ -56,6 +56,18 @@ CREATE TABLE Tag (
     color VARCHAR(50) NOT NULL
 );
 
+INSERT INTO Tag (name, color) VALUES
+('Romantic', 'red'),
+('Scenic View', 'skyblue'),
+('Sunset Spot', 'orange'),
+('Candlelight Dinner', 'gold'),
+('Secluded', 'midnightblue'),
+('Luxury', 'purple'),
+('Nature', 'green'),
+('Rooftop', 'silver'),
+('Cozy', 'pink'),
+('Beachside', 'turquoise');
+
 CREATE TABLE SpotTags (
     spot_id INTEGER REFERENCES Spots(id) ON DELETE CASCADE,
     tag_id INTEGER REFERENCES Tag(id) ON DELETE CASCADE,

@@ -9,36 +9,43 @@ import SwiftUI
 import MapKit
 
 struct ContentView: View {
-    @State private var spots: [Spots] = []
+    @StateObject private var store = SpotsStore()
     @State private var selectedSpot: Spots? = nil
     @State private var tags: [Tag] = []
     @EnvironmentObject var authManager: AuthenticationManager
 
     var body: some View {
         TabView {
-            SpotsView(spots: $spots, selectedSpot: $selectedSpot, tags: $tags)
+            SpotsView(store: store, selectedSpot: $selectedSpot, tags: $tags)
                 .tabItem {
                     Label("Spots", systemImage: "mappin.and.ellipse")
                 }
-            MapView(spots: $spots, selectedSpot: $selectedSpot)
+            MapView(store: store, selectedSpot: $selectedSpot)
                 .tabItem {
                     Label("Map", systemImage: "map")
                 }
-            FavoritesView()
+            FavoritesView(store: store, selectedSpot: $selectedSpot)
                 .tabItem {
                     Label("Favoris", systemImage: "star.fill")
                 }
-            ProfileView(spots: $spots, selectedSpot: $selectedSpot)
+            ProfileView()
                 .tabItem {
                     Label("Profile", systemImage: "person.fill")
                 }
         }
         .onAppear {
+            authManager.refreshAccessToken { success in
+                if success {
+                    print("Token refreshed successfully.")
+                } else {
+                    print("Failed to refresh token.")
+                }
+            }
             loadSpots()
             loadTags()
         }
     }
-
+    
     private func loadTags() {
         guard let url = URL(string: "http://127.0.0.1:3000/tag/all") else {
             print("Wrong URL")
@@ -119,8 +126,33 @@ struct ContentView: View {
                 let toDecodeSpots = try decoder.decode([DecodeSpot].self, from: data)
     
                 for spot in toDecodeSpots {
-                    spots.append(Spots(id: spot.id, name: spot.name, address: spot.address, creator: spot.creator_name, description: spot.description, rating: spot.rating, image: spot.image, link: spot.link, tags: spot.tags, my_rating: spot.my_rating, mapInfo: Spots.MapInfo(logo: spot.logo, color: spot.color, longitude: spot.longitude, latitude: spot.latitude)))
+                    let mapInfo = Spots.MapInfo(
+                        logo: spot.logo,
+                        color: spot.color,
+                        longitude: spot.longitude,
+                        latitude: spot.latitude
+                    )
+
+                    let newSpot = Spots(
+                        id: spot.id,
+                        name: spot.name,
+                        address: spot.address,
+                        creator: spot.creator_name,
+                        description: spot.description,
+                        rating: spot.rating,
+                        image: spot.image,
+                        link: spot.link,
+                        tags: spot.tags,
+                        my_rating: spot.my_rating,
+                        isFavorite: spot.is_favorite,
+                        mapInfo: mapInfo
+                    )
+
+                    DispatchQueue.main.async {
+                        self.store.spots.append(newSpot)
+                    }
                 }
+
 
             } catch {
                 print("Error loading data: \(error.localizedDescription)")
