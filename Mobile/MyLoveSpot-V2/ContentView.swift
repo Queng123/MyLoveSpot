@@ -24,7 +24,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Map", systemImage: "map")
                 }
-            FavoritesView()
+            FavoritesView(store: store, selectedSpot: $selectedSpot)
                 .tabItem {
                     Label("Favoris", systemImage: "star.fill")
                 }
