@@ -92,19 +92,31 @@ struct SpotDetailView: View {
                 return
             }
             if let response = response as? HTTPURLResponse {
-                print("Rating submitted. Status code: \(response.statusCode)")
-                DispatchQueue.main.async {
-                    hasSubmitted = true
-                    updateSelectedSpotRating(to: rating)
+                    if let data = data {
+                        do {
+                            if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                if let newRatingGlobal = jsonResponse["new_rating"] as? Double {
+                                    DispatchQueue.main.async {
+                                        hasSubmitted = true
+                                        updateSelectedSpotRating(to: rating, newRatingGlobal: newRatingGlobal)
+                                    }
+                                } else {
+                                    print("New rating not found in the response")
+                                }
+                            }
+                        } catch {
+                            print("Error parsing response data: \(error)")
+                        }
+                    }
                 }
-            }
             
         }.resume()
     }
-    func updateSelectedSpotRating(to newRating: Int) {
+    func updateSelectedSpotRating(to newRating: Int, newRatingGlobal: Double) {
         if let index = store.spots.firstIndex(where: { $0.id == selectedSpot.id }) {
             DispatchQueue.main.async {
                 store.spots[index].my_rating = newRating
+                store.spots[index].rating = newRatingGlobal
                 store.spots = store.spots
             }
         }

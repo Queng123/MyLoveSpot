@@ -19,7 +19,7 @@ class Spots: Hashable, Identifiable, ObservableObject {
     let address: String
     let creator: String
     let description: String
-    let rating: Double
+    @Published var rating: Double
     let image: URL?
     let link: URL?
     let tags: [String]
