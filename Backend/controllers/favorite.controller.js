@@ -1,10 +1,10 @@
 const favoriteService = require('../services/favorite.service');
 
 exports.add = async (req, res) => {
-  const { spot_id } = req.body;
+  const { spot_id, is_favorite } = req.body;
   const user_id = req.user.id;
   try {
-    const message = await favoriteService.addFavorite(user_id, spot_id);
+    const message = await favoriteService.addFavorite({user_id, spot_id, is_favorite});
     res.json({ message });
   } catch (err) {
     res.status(500).json({ error: err.message });

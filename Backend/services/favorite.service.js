@@ -1,17 +1,41 @@
 const db = require('../database/db');
 
-exports.addFavorite = async ({ user_id, spot_id }) => {
+exports.addFavorite = async ({ user_id, spot_id, is_favorite }) => {
   try {
-    const result = await db.query(
-      `INSERT INTO Favorites (user_id, spot_id)
-       VALUES (?, ?)`,
-      [user_id, spot_id]
-    );
+    if (is_favorite) {
+      const [existingFavorite] = await db.query(
+        `SELECT * FROM Favorites WHERE user_id = ? AND spot_id = ?`,
+        [user_id, spot_id]
+      );
 
-    return result.rows[0];
+      if (existingFavorite.length > 0) {
+        await db.query(
+          `UPDATE Favorites SET updated_at = NOW() WHERE user_id = ? AND spot_id = ?`,
+          [user_id, spot_id]
+        );
+        return { message: 'Favorite updated' };
+      } else {
+        const [result] = await db.query(
+          `INSERT INTO Favorites (user_id, spot_id) VALUES (?, ?)`,
+          [user_id, spot_id]
+        );
+        return { message: 'Favorite added', favorite: result };
+      }
+    } else {
+      const result = await db.query(
+        `DELETE FROM Favorites WHERE user_id = ? AND spot_id = ?`,
+        [user_id, spot_id]
+      );
+
+      if (result.rowCount > 0) {
+        return { message: 'Favorite removed' };
+      } else {
+        return { message: 'No favorite found to remove' };
+      }
+    }
   } catch (error) {
     console.error(error);
-    throw new Error('Error adding favorite');
+    throw new Error('Error adding, updating, or deleting favorite');
   }
 };
 
