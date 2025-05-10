@@ -9,7 +9,8 @@
 import SwiftUI
 
 struct SpotDetailView: View {
-    @Binding var spot: Spots
+    @Binding var selectedSpot: Spots
+    @ObservedObject var store: SpotsStore
     @Environment(\.presentationMode) var presentationMode
     @State private var rating: Int = 0
     @State private var hasSubmitted = false
@@ -17,11 +18,11 @@ struct SpotDetailView: View {
 
     var body: some View {
         VStack {
-            Text(spot.name)
+            Text(selectedSpot.name)
                 .font(.title)
                 .padding()
             
-            Text(spot.description)
+            Text(selectedSpot.description)
                 .padding()
 
             HStack {
@@ -53,8 +54,8 @@ struct SpotDetailView: View {
             }
             .padding()
         }.onAppear {
-            if spot.my_rating != -1 {
-                rating = spot.my_rating
+            if selectedSpot.my_rating != -1 {
+                rating = selectedSpot.my_rating
                 hasSubmitted = true
             }
             
@@ -74,7 +75,7 @@ struct SpotDetailView: View {
             print("Token: Not available")
         }
         let ratingData: [String: Any] = [
-            "spot_id": spot.id,
+            "spot_id": selectedSpot.id,
             "rating": rating
         ]
         
@@ -94,9 +95,18 @@ struct SpotDetailView: View {
                 print("Rating submitted. Status code: \(response.statusCode)")
                 DispatchQueue.main.async {
                     hasSubmitted = true
+                    updateSelectedSpotRating(to: rating)
                 }
             }
-            spot.my_rating = rating
+            
         }.resume()
+    }
+    func updateSelectedSpotRating(to newRating: Int) {
+        if let index = store.spots.firstIndex(where: { $0.id == selectedSpot.id }) {
+            DispatchQueue.main.async {
+                store.spots[index].my_rating = newRating
+                store.spots = store.spots
+            }
+        }
     }
 }

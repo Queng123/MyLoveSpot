@@ -10,7 +10,7 @@ import MapKit
 import CoreLocation
 
 struct MapView: View {
-    @Binding var spots: [Spots]
+    @ObservedObject var store: SpotsStore
     @Binding var selectedSpot: Spots?
 
     @StateObject private var locationManager = LocationManager()
@@ -22,16 +22,16 @@ struct MapView: View {
 
     var body: some View {
         Map(position: $region, selection: $selectedSpot) {
-            ForEach(spots) { spot in
+            ForEach(store.spots) { spot in
                 if let mapInfo = spot.mapInfo {
-                        Marker(
-                            spot.name,
-                            systemImage: mapInfo.logo,
-                            coordinate: mapInfo.coordinates
-                        )
-                        .tint(mapInfo.color)
-                        .tag(spot)
-                    }
+                    Marker(
+                        spot.name,
+                        systemImage: mapInfo.logo,
+                        coordinate: mapInfo.coordinates
+                    )
+                    .tint(mapInfo.color)
+                    .tag(spot)
+                }
             }
         }.onAppear {
             locationManager.checkLocationAuthorization()

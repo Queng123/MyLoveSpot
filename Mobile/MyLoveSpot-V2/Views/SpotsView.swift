@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct SpotsView: View {
-    @Binding var spots: [Spots]
+    @ObservedObject var store: SpotsStore
     @State private var searchText = ""
     @Binding var selectedSpot: Spots?
     @Binding var tags: [Tag]
@@ -21,8 +21,9 @@ struct SpotsView: View {
     @State private var showingNewSpotForm = false
     
     private func indexForSpot(_ spot: Spots) -> Int? {
-        return spots.firstIndex(where: { $0.id == spot.id })
+        return store.spots.firstIndex(where: { $0.id == spot.id })
     }
+
     
     var body: some View {
         NavigationView {
@@ -85,11 +86,12 @@ struct SpotsView: View {
                     
                     ScrollView {
                         LazyVStack(spacing: 20) {
-                            ForEach(spots) { spot in
-                                SpotCard(spot: spot, userLocation: locationManager.lastKnownLocation)
+                            ForEach($store.spots) { $spot in
+                                SpotCard(spot: $spot, userLocation: locationManager.lastKnownLocation)
                                     .padding(.horizontal)
                                     .onTapGesture {
                                         selectedSpot = spot
+                                        print("selected spot: \(spot.name)")
                                         showingSpotDetail = true
                                     }
                             }
@@ -140,19 +142,17 @@ struct SpotsView: View {
             .onAppear {
                 locationManager.checkLocationAuthorization()
             }
-            .sheet(isPresented: $showingSpotDetail) {
-                if let spot = selectedSpot, let index = indexForSpot(spot) {
-                    SpotDetailView(spot: $spots[index])
-                }
+            .sheet(item: $selectedSpot) { spot in
+                SpotDetailView(selectedSpot: .constant(spot), store: store)
             }.sheet(isPresented: $showingNewSpotForm) {
-                NewSpotFormView(spots: $spots, isPresented: $showingNewSpotForm, tags: $tags, selectedSpot: $selectedSpot)
+                NewSpotFormView(store: store, isPresented: $showingNewSpotForm, tags: $tags)
             }
         }
     }
 }
 
 struct SpotCard: View {
-    let spot: Spots
+    @Binding var spot: Spots
     let userLocation: CLLocationCoordinate2D?
     
     var distanceText: String {
@@ -190,11 +190,9 @@ struct SpotCard: View {
                         .lineLimit(1)
                     
                     Spacer()
-                    
-                    Button(action: {}) {
-                        Image(systemName: "star")
-                            .foregroundColor(.gray)
-                    }
+                
+                    Image(systemName: spot.my_rating != -1 ? "star.fill" : "star")
+                        .foregroundColor(spot.my_rating != -1 ? .yellow : .gray)
                     
                     Text(spot.rating, format: .number.precision(.fractionLength(1)))
                         .foregroundColor(.gray)
@@ -211,12 +209,9 @@ struct SpotCard: View {
                     
                     Spacer()
                     
-                    Image(systemName: "person.2")
-                        .foregroundColor(.gray)
+                    Image(systemName: spot.isFavorite ? "heart.fill" : "heart")
+                        .foregroundColor(spot.isFavorite ? .red : .gray)
                     
-                    Text("2.3k")
-                        .foregroundColor(.gray)
-                        .font(.subheadline)
                 }
             }
             .padding(.horizontal, 8)

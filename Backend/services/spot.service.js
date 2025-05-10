@@ -40,7 +40,6 @@ exports.createSpot = async (
   }
 };
 
-// TODO: if the current user is the creator of the spot, do creator_name = me
 exports.getAllSpots = async (user_id) => {
   try {
     const result = await db.query('SELECT * FROM Spots');
@@ -53,7 +52,13 @@ exports.getAllSpots = async (user_id) => {
 
     for (const spot of spots) {
       const [creatorRow] = await db.query('SELECT name FROM User WHERE id = ?', [spot.creator_id]);
-      const creator_name = creatorRow[0]?.name || 'Unknown';
+      let creator_name = "Unknown";
+      if (spot.creator_id === user_id) {
+        creator_name = 'me';
+      } else {
+        creator_name = creatorRow[0]?.name || 'Unknown';
+      }
+      
       const tagsResult = await db.query(
         `SELECT Tag.name
          FROM SpotTags
@@ -66,6 +71,12 @@ exports.getAllSpots = async (user_id) => {
         `SELECT note FROM Rating WHERE user_id = ? AND spot_id = ?`,
         [user_id, spot.id]
       );
+
+      const isFavorite = await db.query(
+        `SELECT * FROM Favorites WHERE user_id = ? AND spot_id = ?`,
+        [user_id, spot.id]
+      );
+      const isFavoriteResult = isFavorite[0].length > 0;
       const rating = myRating[0]?.note || -1;
 
       const tags = tagsResult[0].map(tag => tag.name);
@@ -74,7 +85,8 @@ exports.getAllSpots = async (user_id) => {
         ...spotWithoutCreatorId,
         creator_name,
         tags,
-        my_rating: rating
+        my_rating: rating,
+        is_favorite: isFavoriteResult,
       });
     }
     return finalResult;

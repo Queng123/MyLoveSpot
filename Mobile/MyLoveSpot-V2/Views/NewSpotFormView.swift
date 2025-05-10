@@ -9,10 +9,9 @@ import SwiftUI
 import MapKit
 
 struct NewSpotFormView: View {
-    @Binding var spots: [Spots]
+    @ObservedObject var store: SpotsStore
     @Binding var isPresented: Bool
     @Binding var tags: [Tag]
-    @Binding var selectedSpot: Spots?
     
     @EnvironmentObject var authManager: AuthenticationManager
     
@@ -143,7 +142,7 @@ struct NewSpotFormView: View {
             do {
                 let decodedResponse = try JSONDecoder().decode(IdResponse.self, from: data)
                 id = decodedResponse.id
-                
+
                 let newSpot = Spots(
                     id: id,
                     name: name,
@@ -155,6 +154,7 @@ struct NewSpotFormView: View {
                     link: link,
                     tags: selectedTags,
                     my_rating: -1,
+                    isFavorite: false,
                     mapInfo: Spots.MapInfo(
                         logo: "heart.fill",
                         color: "#FFFFFF",
@@ -162,9 +162,11 @@ struct NewSpotFormView: View {
                         latitude: String(location.latitude)
                     )
                 )
-                spots.append(newSpot)
+
+                DispatchQueue.main.async {
+                    self.store.spots.append(newSpot)
+                }
                 isPresented = false
-                selectedSpot = nil
             } catch {
                 print("Failed to decode JSON: \(error.localizedDescription)")
             }

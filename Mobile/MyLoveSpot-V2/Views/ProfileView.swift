@@ -37,8 +37,6 @@ struct SettingsRow: View {
 }
 
 struct ProfileView: View {
-    @Binding var spots: [Spots]
-    @Binding var selectedSpot: Spots?
     @EnvironmentObject var authManager: AuthenticationManager
 
     var body: some View {
