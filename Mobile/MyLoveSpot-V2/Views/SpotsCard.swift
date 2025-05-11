@@ -42,6 +42,8 @@ struct SpotCard: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
+                    Image(systemName: spot.mapInfo?.logo ?? "pin")
+                        .foregroundColor(spot.mapInfo?.color ?? .gray)
                     Text(spot.name)
                         .font(.headline)
                         .lineLimit(1)
