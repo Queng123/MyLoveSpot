@@ -115,7 +115,7 @@ struct NewSpotFormView: View {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body: [String: Any] = ["name": name, "description": description, "address": address, "longitude": String(location.longitude), "latitude": String(location.latitude), "logo": "heart.fill", "color": "#FFFFFF", "image": image, "link": link, "tags": selectedTags.joined(separator: ",").isEmpty ? [] : selectedTags]
+        let body: [String: Any] = ["name": name, "description": description, "address": address, "longitude": String(location.longitude), "latitude": String(location.latitude), "logo": "pin.fill", "color": "#FF0000", "image": image, "link": link, "tags": selectedTags.joined(separator: ",").isEmpty ? [] : selectedTags]
         print(body)
         if let token = authManager.getJWTToken() {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -156,8 +156,8 @@ struct NewSpotFormView: View {
                     my_rating: -1,
                     isFavorite: false,
                     mapInfo: Spots.MapInfo(
-                        logo: "heart.fill",
-                        color: "#FFFFFF",
+                        logo: "pin.fill",
+                        color: "#FF0000",
                         longitude: String(location.longitude),
                         latitude: String(location.latitude)
                     )
