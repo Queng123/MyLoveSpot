@@ -328,6 +328,40 @@ class AuthenticationManager: ObservableObject {
             }
         }.resume()
     }
+    
+    func changePassword(oldPassword: String, newPassword: String, completion: @escaping (Bool, String?) -> Void) {
+        guard let url = URL(string: "http://localhost:3000/user/change-password"),
+              let token = accessToken else {
+            completion(false, "Invalid URL or not authenticated")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let body: [String: String] = [
+            "oldPassword": oldPassword,
+            "newPassword": newPassword
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                    completion(true, nil)
+                } else if let data = data,
+                          let errorJSON = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                          let errorMessage = errorJSON["error"] as? String {
+                    completion(false, errorMessage)
+                } else {
+                    completion(false, "Unknown error occurred")
+                }
+            }
+        }.resume()
+    }
+
 
 }
 
