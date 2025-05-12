@@ -292,4 +292,43 @@ class AuthenticationManager: ObservableObject {
         
         SecItemDelete(query as CFDictionary)
     }
+    
+    func fetchUserProfile(completion: @escaping (Result<[String: Any], Error>) -> Void) {
+        guard let token = getJWTToken(),
+              let url = URL(string: "http://localhost:3000/user/profile") else {
+            completion(.failure(NSError(domain: "Invalid token or URL", code: 0)))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data else {
+                    completion(.failure(NSError(domain: "No data", code: 0)))
+                    return
+                }
+                
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                        completion(.success(json))
+                    } else {
+                        completion(.failure(NSError(domain: "Invalid JSON", code: 0)))
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }.resume()
+    }
+
 }
+
+
