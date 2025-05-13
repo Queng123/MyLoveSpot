@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct MyLoveSpot_V2App: App {
+struct MyLoveSpotApp: App {
     @StateObject private var authManager = AuthenticationManager()
     
     var body: some Scene {

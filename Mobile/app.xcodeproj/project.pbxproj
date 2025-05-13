@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		6430DFD62D77B666009995BD /* MyLoveSpot-V2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MyLoveSpot-V2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		647A55B82DD2DF9A00959128 /* app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		6430DFD82D77B666009995BD /* MyLoveSpot-V2 */ = {
+		647A55BA2DD2DF9A00959128 /* app */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "MyLoveSpot-V2";
+			path = app;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		6430DFD32D77B666009995BD /* Frameworks */ = {
+		647A55B52DD2DF9A00959128 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -29,18 +29,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6430DFCD2D77B666009995BD = {
+		647A55AF2DD2DF9A00959128 = {
 			isa = PBXGroup;
 			children = (
-				6430DFD82D77B666009995BD /* MyLoveSpot-V2 */,
-				6430DFD72D77B666009995BD /* Products */,
+				647A55BA2DD2DF9A00959128 /* app */,
+				647A55B92DD2DF9A00959128 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		6430DFD72D77B666009995BD /* Products */ = {
+		647A55B92DD2DF9A00959128 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6430DFD62D77B666009995BD /* MyLoveSpot-V2.app */,
+				647A55B82DD2DF9A00959128 /* app.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,64 +48,64 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6430DFD52D77B666009995BD /* MyLoveSpot-V2 */ = {
+		647A55B72DD2DF9A00959128 /* app */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6430DFE42D77B667009995BD /* Build configuration list for PBXNativeTarget "MyLoveSpot-V2" */;
+			buildConfigurationList = 647A55C32DD2DF9B00959128 /* Build configuration list for PBXNativeTarget "app" */;
 			buildPhases = (
-				6430DFD22D77B666009995BD /* Sources */,
-				6430DFD32D77B666009995BD /* Frameworks */,
-				6430DFD42D77B666009995BD /* Resources */,
+				647A55B42DD2DF9A00959128 /* Sources */,
+				647A55B52DD2DF9A00959128 /* Frameworks */,
+				647A55B62DD2DF9A00959128 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				6430DFD82D77B666009995BD /* MyLoveSpot-V2 */,
+				647A55BA2DD2DF9A00959128 /* app */,
 			);
-			name = "MyLoveSpot-V2";
+			name = app;
 			packageProductDependencies = (
 			);
-			productName = "MyLoveSpot-V2";
-			productReference = 6430DFD62D77B666009995BD /* MyLoveSpot-V2.app */;
+			productName = app;
+			productReference = 647A55B82DD2DF9A00959128 /* app.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		6430DFCE2D77B666009995BD /* Project object */ = {
+		647A55B02DD2DF9A00959128 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1620;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
-					6430DFD52D77B666009995BD = {
-						CreatedOnToolsVersion = 16.2;
+					647A55B72DD2DF9A00959128 = {
+						CreatedOnToolsVersion = 16.3;
 					};
 				};
 			};
-			buildConfigurationList = 6430DFD12D77B666009995BD /* Build configuration list for PBXProject "MyLoveSpot-V2" */;
+			buildConfigurationList = 647A55B32DD2DF9A00959128 /* Build configuration list for PBXProject "app" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 6430DFCD2D77B666009995BD;
+			mainGroup = 647A55AF2DD2DF9A00959128;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 6430DFD72D77B666009995BD /* Products */;
+			productRefGroup = 647A55B92DD2DF9A00959128 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6430DFD52D77B666009995BD /* MyLoveSpot-V2 */,
+				647A55B72DD2DF9A00959128 /* app */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		6430DFD42D77B666009995BD /* Resources */ = {
+		647A55B62DD2DF9A00959128 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,7 +115,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6430DFD22D77B666009995BD /* Sources */ = {
+		647A55B42DD2DF9A00959128 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -125,7 +125,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		6430DFE22D77B667009995BD /* Debug */ = {
+		647A55C12DD2DF9B00959128 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -160,6 +160,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8WATQ8XR77;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -177,7 +178,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -188,7 +189,7 @@
 			};
 			name = Debug;
 		};
-		6430DFE32D77B667009995BD /* Release */ = {
+		647A55C22DD2DF9B00959128 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -223,6 +224,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8WATQ8XR77;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -234,7 +236,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -244,17 +246,19 @@
 			};
 			name = Release;
 		};
-		6430DFE52D77B667009995BD /* Debug */ = {
+		647A55C42DD2DF9B00959128 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MyLoveSpot-V2/Preview Content\"";
+				DEVELOPMENT_TEAM = 8WATQ8XR77;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app needs access to your location to provide location-based services to load the map";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = app/MyLoveSpotInfo.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MyLoveSpot;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -265,25 +269,28 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.sfsu.MyLoveSpot-V2";
+				PRODUCT_BUNDLE_IDENTIFIER = org.mylovespot.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		6430DFE62D77B667009995BD /* Release */ = {
+		647A55C52DD2DF9B00959128 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MyLoveSpot-V2/Preview Content\"";
+				DEVELOPMENT_TEAM = 8WATQ8XR77;
 				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app needs access to your location to provide location-based services to load the map";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = app/MyLoveSpotInfo.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MyLoveSpot;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -294,8 +301,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.sfsu.MyLoveSpot-V2";
+				PRODUCT_BUNDLE_IDENTIFIER = org.mylovespot.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -305,25 +313,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6430DFD12D77B666009995BD /* Build configuration list for PBXProject "MyLoveSpot-V2" */ = {
+		647A55B32DD2DF9A00959128 /* Build configuration list for PBXProject "app" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6430DFE22D77B667009995BD /* Debug */,
-				6430DFE32D77B667009995BD /* Release */,
+				647A55C12DD2DF9B00959128 /* Debug */,
+				647A55C22DD2DF9B00959128 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6430DFE42D77B667009995BD /* Build configuration list for PBXNativeTarget "MyLoveSpot-V2" */ = {
+		647A55C32DD2DF9B00959128 /* Build configuration list for PBXNativeTarget "app" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6430DFE52D77B667009995BD /* Debug */,
-				6430DFE62D77B667009995BD /* Release */,
+				647A55C42DD2DF9B00959128 /* Debug */,
+				647A55C52DD2DF9B00959128 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 6430DFCE2D77B666009995BD /* Project object */;
+	rootObject = 647A55B02DD2DF9A00959128 /* Project object */;
 }
