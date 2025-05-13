@@ -292,4 +292,77 @@ class AuthenticationManager: ObservableObject {
         
         SecItemDelete(query as CFDictionary)
     }
+    
+    func fetchUserProfile(completion: @escaping (Result<[String: Any], Error>) -> Void) {
+        guard let token = getJWTToken(),
+              let url = URL(string: "http://localhost:3000/user/profile") else {
+            completion(.failure(NSError(domain: "Invalid token or URL", code: 0)))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data else {
+                    completion(.failure(NSError(domain: "No data", code: 0)))
+                    return
+                }
+                
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                        completion(.success(json))
+                    } else {
+                        completion(.failure(NSError(domain: "Invalid JSON", code: 0)))
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }.resume()
+    }
+    
+    func changePassword(oldPassword: String, newPassword: String, completion: @escaping (Bool, String?) -> Void) {
+        guard let url = URL(string: "http://localhost:3000/user/change-password"),
+              let token = accessToken else {
+            completion(false, "Invalid URL or not authenticated")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let body: [String: String] = [
+            "oldPassword": oldPassword,
+            "newPassword": newPassword
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                    completion(true, nil)
+                } else if let data = data,
+                          let errorJSON = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                          let errorMessage = errorJSON["error"] as? String {
+                    completion(false, errorMessage)
+                } else {
+                    completion(false, "Unknown error occurred")
+                }
+            }
+        }.resume()
+    }
+
+
 }
+
+

@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-var list_of_FAQs = ["How can I delete a post?" : "To delete a post navigate to your account and select on the post you would like to delete, pressed the edit button in the top right and at the bottom there is a button you can delete the post with.", "How can I turn notifications off?" : "To turn notificaitons off naviate to the setting at and toddle the button next to notificaitons"]
+var list_of_FAQs = ["How can I create an account?" : "To create an account, if already logged into one navigate to the user profile and log out. You will then be shown a login screen. There will be a button at the bottom that says 'sign up'. Click sign up and enter in your information.", "How can I turn notifications off?" : "To turn notificaitons off naviate to the setting at and toggle the button next to notificaitons. If it is already off navigate to the setting on your mobile device. Enter the notification tab and look for our app there to change the notification settings!", "How can I create a post?" : "Naviate to the list of spots by pressing the pin icon on the bottom left of the screen. Click on the black plus button on the bottom right, above the navigation bar", "How can I review a spot?" : "Navigate to the spot you would like to review. Click on the star rating, give your rating out of five stars and click on the blue button that says submit. ", "How can I add a spot to my favorites?" : "Navigate to the spot you would like to favorite, click on the red heart, a popup to rate the spot will show up. Above the rating will be the name of spot and a red heart. Click on the read heart and when it is added to your favorites the heart will change colors to red"]
 // CONVERT THIS TO an array of key value pairs
  
 struct FAQBox: View{
@@ -38,13 +38,14 @@ struct HelpCenterView: View{
         
         ScrollView {
             VStack(alignment: .leading) {
-                
-                FAQBox(Question: "HOW", Answer: "THIS IS THE ANSWER")
-                
                 ForEach(Array(list_of_FAQs), id: \.0) { q, a in
                             FAQBox(Question: q, Answer: a)
                         }
             }
         }.frame(maxWidth: .infinity)
     }
+}
+
+#Preview{
+    HelpCenterView()
 }

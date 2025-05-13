@@ -6,125 +6,216 @@
 //
 
 import SwiftUI
+import UserNotifications
 
-struct SettingsRow: View {
+struct SettingsRow<Content: View>: View {
     var icon: String
     var label: String
+    let destination: Content
 
+    init(icon: String, label: String, @ViewBuilder destination: () -> Content) {
+          self.icon = icon
+          self.label = label
+          self.destination = destination()
+      }
+    
     var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .resizable()
-                .frame(width: 35, height: 35)
-                .padding(.leading, 30)
-                .padding(.trailing, 10)
-
-            Text(label)
-                .font(.title2)
-                .fontWeight(.medium)
-
-            Spacer()
-
-            Image(systemName: "chevron.right")
-                .resizable()
-                .frame(width: 12, height: 19)
-                .foregroundColor(.black)
-                .padding(.trailing, 30)
-        }
+        
+        NavigationLink(destination: destination){
+            HStack {
+                Image(systemName: icon)
+                    .resizable()
+                    .frame(width: 35, height: 35)
+                    .padding(.leading, 30)
+                    .padding(.trailing, 10)
+                
+                Text(label)
+                    .font(.title2)
+                    .fontWeight(.medium)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .resizable()
+                    .frame(width: 12, height: 19)
+                    .foregroundColor(.black)
+                    .padding(.trailing, 30)
+            }
+        }.foregroundColor(.black)
         Divider()
             .padding(.horizontal, 15)
     }
 }
 
-struct ProfileView: View {
-    @EnvironmentObject var authManager: AuthenticationManager
 
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    
-                    Text("Profile")
-                        .font(.largeTitle).bold()
-                        .padding(.leading,30)
-                        .padding(.top, 20)
-                    
-                    NavigationLink(destination: UserView()) {
-                        HStack {
-                            Image(systemName: "person.crop.circle.fill")
-                                .resizable()
-                                .frame(width: 55, height: 55)
-                                .foregroundColor(.black)
-                                .padding()
-
-                            VStack(alignment: .leading) {
-                                Text("User name")
-                                    .foregroundColor(.black)
-
-                                Text("Show Profile")
-                                    .foregroundColor(.gray)
-                            }
-
-                            Spacer()
-
-                            Image(systemName: "chevron.right")
-                                .resizable()
-                                .frame(width: 12, height: 19)
-                                .foregroundColor(.black)
-                                .padding(.trailing, 20)
-                        }
-                        .background(Color.white)
-                        .cornerRadius(12)
-                        .padding(.horizontal, 15)
-                        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
-                    }
-
-                    Text("Settings")
-                        .font(.largeTitle).bold()
-                        .padding(.leading,30)
-
-                    HStack {
-                        Image(systemName: "bell.circle")
-                            .resizable()
-                            .frame(width: 35, height: 35)
-                            .padding(.leading, 30)
-                            .padding(.trailing, 10)
-
-                        Text("Notifications")
-                            .font(.title2)
-                            .fontWeight(.medium)
-
-                        Spacer()
-                        Toggle(isOn: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Is On@*/.constant(true)/*@END_MENU_TOKEN@*/) {
-                            
-                        }.padding(.trailing, 30)
-                    }
-                    Divider()
-                        .padding(.horizontal, 15)
-                
-
-                    Text("Support")
-                        .font(.largeTitle).bold()
-                        .padding(.leading,30)
-
-                    SettingsRow(icon: "questionmark.circle", label: "Help Center")
-                    SettingsRow(icon: "envelope.circle", label: "Contact us")
-                    SettingsRow(icon: "pencil", label: "Give us feedback")
-                }
-                .padding(.bottom, 40)
-                Button("Logout") {
-                    authManager.logout()
-                }
-                .foregroundColor(Color.red)
-                Spacer()
-            }
+func openAppStoreReview() {
+    let appStoreID = "TEMP-app-id"
+        if let url = URL(string: "https://apps.apple.com/app/id\(appStoreID)?action=write-review") {
+            UIApplication.shared.open(url)
         }
     }
+
+
+
+
+
+struct ProfileView: View {
+    @EnvironmentObject var authManager: AuthenticationManager
+    @State private var name = ""
+    @State private var notificationsEnabled = false
+    
+    func requestNotificationPermission() {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+                DispatchQueue.main.async {
+                    notificationsEnabled = granted
+                    UserDefaults.standard.set(granted, forKey: "notificationsEnabled")
+                }
+            }
+        }
+    func disableNotifications() {
+         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+         UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+         UserDefaults.standard.set(false, forKey: "notificationsEnabled")
+     }
+   
+
+    var body: some View {
+        if !name.isEmpty{
+            NavigationStack {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        
+                        Text("Profile")
+                            .font(.largeTitle).bold()
+                            .padding(.leading,30)
+                            .padding(.top, 20)
+                        
+                        NavigationLink(destination: UserView()) {
+                            HStack {
+                                Image(systemName: "person.crop.circle.fill")
+                                    .resizable()
+                                    .frame(width: 55, height: 55)
+                                    .foregroundColor(.black)
+                                    .padding()
+                                
+                                VStack(alignment: .leading) {
+                                    Text(name)
+                                        .foregroundColor(.black)
+                                    
+                                    Text("Show Profile")
+                                        .foregroundColor(.gray)
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .frame(width: 12, height: 19)
+                                    .foregroundColor(.black)
+                                    .padding(.trailing, 20)
+                            }
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .padding(.horizontal, 15)
+                            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
+                        }
+                        
+                        Text("Settings")
+                            .font(.largeTitle).bold()
+                            .padding(.leading,30)
+                        
+                        HStack {
+                            Image(systemName: "bell.circle")
+                                .resizable()
+                                .frame(width: 35, height: 35)
+                                .padding(.leading, 30)
+                                .padding(.trailing, 10)
+                            
+                            Text("Notifications")
+                                .font(.title2)
+                                .fontWeight(.medium)
+                            
+                            Spacer()
+                            Toggle(isOn: $notificationsEnabled) {
+                                
+                            }
+                            .onChange(of: notificationsEnabled){
+                                oldValue, newValue in
+                                if newValue {
+                                    requestNotificationPermission()
+                                } else {
+                                    disableNotifications()
+                                }
+                            }
+                        }.padding(.trailing, 30)
+                            
+                        Divider()
+                            .padding(.horizontal, 15)
+                        
+                        
+                        Text("Support")
+                            .font(.largeTitle).bold()
+                            .padding(.leading,30)
+                        
+                        SettingsRow(icon: "questionmark.circle", label: "Help Center"){
+                            HelpCenterView()
+                        }
+                        SettingsRow(icon: "envelope.circle", label: "Contact us"){
+                            ContactUs()
+                        }
+                        
+                        
+                        Button(action: openAppStoreReview){
+                            
+                            HStack {
+                                Image(systemName: "pencil")
+                                    .resizable()
+                                    .frame(width: 35, height: 35)
+                                    .padding(.leading, 30)
+                                    .padding(.trailing, 10)
+                                
+                                Text("Give us feedback")
+                                    .font(.title2)
+                                    .fontWeight(.medium)
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .frame(width: 12, height: 19)
+                                    .foregroundColor(.black)
+                                    .padding(.trailing, 30)
+                            }
+                        }.foregroundColor(.black)
+                        Divider()
+                            .padding(.horizontal, 15)
+                        
+                        
+                    }
+                    .padding(.bottom, 40)
+                    Button("Logout") {
+                        authManager.logout()
+                    }
+                    .foregroundColor(Color.red)
+                    Spacer()
+                }
+            }
+        } else{
+            ProgressView().onAppear {
+                authManager.fetchUserProfile { result in
+                    switch result {
+                    case .success(let profile):
+                        name = profile["name"] as? String ?? ""
+                    case .failure(let error):
+                        print("Failed to get profile:", error)
+                        
+                    }
+                }
+            }
+        }
+        
+    }
 }
-
-// helpcenter create FAQ's for user to look through
-
-// user profile will just be the spots the have posted/created
-
-// Contact us is what you expect it to be
-// feedback is a link to write a review for the app on the app store
+#Preview{
+    ProfileView()
+}
