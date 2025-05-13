@@ -7,34 +7,54 @@
 
 import SwiftUI
 
-struct SettingsRow: View {
+struct SettingsRow<Content: View>: View {
     var icon: String
     var label: String
+    let destination: Content
 
+    init(icon: String, label: String, @ViewBuilder destination: () -> Content) {
+          self.icon = icon
+          self.label = label
+          self.destination = destination()
+      }
+    
     var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .resizable()
-                .frame(width: 35, height: 35)
-                .padding(.leading, 30)
-                .padding(.trailing, 10)
-
-            Text(label)
-                .font(.title2)
-                .fontWeight(.medium)
-
-            Spacer()
-
-            Image(systemName: "chevron.right")
-                .resizable()
-                .frame(width: 12, height: 19)
-                .foregroundColor(.black)
-                .padding(.trailing, 30)
-        }
+        
+        NavigationLink(destination: destination){
+            
+            
+            HStack {
+                Image(systemName: icon)
+                    .resizable()
+                    .frame(width: 35, height: 35)
+                    .padding(.leading, 30)
+                    .padding(.trailing, 10)
+                
+                Text(label)
+                    .font(.title2)
+                    .fontWeight(.medium)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .resizable()
+                    .frame(width: 12, height: 19)
+                    .foregroundColor(.black)
+                    .padding(.trailing, 30)
+            }
+        }.foregroundColor(.black)
         Divider()
             .padding(.horizontal, 15)
     }
 }
+
+
+func openAppStoreReview() {
+    let appStoreID = "YOUR_APP_ID"
+        if let url = URL(string: "https://apps.apple.com/app/id\(appStoreID)?action=write-review") {
+            UIApplication.shared.open(url)
+        }
+    }
 
 struct ProfileView: View {
     @EnvironmentObject var authManager: AuthenticationManager
@@ -107,9 +127,40 @@ struct ProfileView: View {
                         .font(.largeTitle).bold()
                         .padding(.leading,30)
 
-                    SettingsRow(icon: "questionmark.circle", label: "Help Center")
-                    SettingsRow(icon: "envelope.circle", label: "Contact us")
-                    SettingsRow(icon: "pencil", label: "Give us feedback")
+                    SettingsRow(icon: "questionmark.circle", label: "Help Center"){
+                        HelpCenterView()
+                    }
+                    SettingsRow(icon: "envelope.circle", label: "Contact us"){
+                        ContactUs()
+                    }
+
+                        
+                    Button(action: openAppStoreReview){
+                            
+                            HStack {
+                                Image(systemName: "pencil")
+                                    .resizable()
+                                    .frame(width: 35, height: 35)
+                                    .padding(.leading, 30)
+                                    .padding(.trailing, 10)
+                                
+                                Text("Give us feedback")
+                                    .font(.title2)
+                                    .fontWeight(.medium)
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .resizable()
+                                    .frame(width: 12, height: 19)
+                                    .foregroundColor(.black)
+                                    .padding(.trailing, 30)
+                            }
+                        }.foregroundColor(.black)
+                        Divider()
+                            .padding(.horizontal, 15)
+                    
+                    
                 }
                 .padding(.bottom, 40)
                 Button("Logout") {
@@ -121,10 +172,6 @@ struct ProfileView: View {
         }
     }
 }
-
-// helpcenter create FAQ's for user to look through
-
-// user profile will just be the spots the have posted/created
-
-// Contact us is what you expect it to be
-// feedback is a link to write a review for the app on the app store
+#Preview{
+    ProfileView()
+}

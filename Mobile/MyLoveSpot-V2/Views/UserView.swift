@@ -94,7 +94,7 @@ struct UserView: View {
                         }
                         
                         if showSaveSuccess {
-                            Text("Changes saved successfully!")
+                            Text("Changed successfully!")
                                 .foregroundColor(.green)
                                 .transition(.opacity)
                                 .padding()
@@ -125,7 +125,7 @@ struct UserView: View {
         
         
     }
-    // TODO: FIX
+    
     func saveChanges() {
         isLoading = true
         message = nil
