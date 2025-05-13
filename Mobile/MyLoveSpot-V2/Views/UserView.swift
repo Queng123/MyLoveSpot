@@ -115,7 +115,7 @@ struct UserView: View {
                             self.name = profile["name"] as? String ?? ""
                             self.email = profile["email"] as? String ?? ""
                         case .failure(let error):
-                            print("Failed to fetch profile:", error)
+                            print("Failed to get profile:", error)
                             
                         }
                     }
