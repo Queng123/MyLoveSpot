@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		647A55B82DD2DF9A00959128 /* app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		647A55B82DD2DF9A00959128 /* MyLoveSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyLoveSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -40,7 +40,7 @@
 		647A55B92DD2DF9A00959128 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				647A55B82DD2DF9A00959128 /* app.app */,
+				647A55B82DD2DF9A00959128 /* MyLoveSpot.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -67,7 +67,7 @@
 			packageProductDependencies = (
 			);
 			productName = app;
-			productReference = 647A55B82DD2DF9A00959128 /* app.app */;
+			productReference = 647A55B82DD2DF9A00959128 /* MyLoveSpot.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -270,7 +270,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.mylovespot.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = MyLoveSpot;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -302,7 +302,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.mylovespot.app;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = MyLoveSpot;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
